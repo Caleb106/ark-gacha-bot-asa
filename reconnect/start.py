@@ -23,6 +23,7 @@ class reconnect():
                 c = crash.crash(windows.hwnd)
                 c.re_open_game()
                 start_time = time.time()
+                print("time was greater than x crashing game now")
             main_menu.enter_menu()
             join_menu.enter_menu()
             multiplayer_menu.join_server(self.server)

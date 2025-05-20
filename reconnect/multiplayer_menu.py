@@ -28,12 +28,13 @@ def join_server(server_name):
     if not recon_utils.check_template_no_bounds("multiplayer", 0.7):
         utils.press_key("ShowTribeManager")
         return
-
+    time.sleep(0.3)
     windows.click(get_pixel_loc("search_x"), get_pixel_loc("search_y"))
-    time.sleep(0.1)
+    time.sleep(0.3)
     utils.ctrl_a()
+    time.sleep(0.2)
     utils.write(server_name)
-    time.sleep(0.2)    
+    time.sleep(0.3)    
     windows.click(get_pixel_loc("first_server_x"), get_pixel_loc("first_server_y"))
     
     if recon_utils.check_template_no_bounds("join_button", 0.7):
