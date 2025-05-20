@@ -22,7 +22,7 @@ def close():
         attempts += 1
         logs.logger.debug(f"trying to close the bed {attempts} / {ASA.config.teleporter_close_attempts}")
         windows.click(variables.get_pixel_loc("back_button_tp_x"),variables.get_pixel_loc("back_button_tp_y"))
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
 
         if attempts >= ASA.config.teleporter_close_attempts:
             logs.logger.error(f"unable to close the bed after {ASA.config.teleporter_close_attempts} attempts")
@@ -42,7 +42,7 @@ def spawn_in(bed_name:str):
         utils.ctrl_a() #CTRL A removes all previous data in the search bar 
         utils.write(bed_name)
 
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
         windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y"))
 
         if not template.template_await_true(template.check_template,1,"ready_clicked_bed",0.7): # waiting for the bed to appear as ready to spawn in

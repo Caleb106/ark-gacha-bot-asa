@@ -31,38 +31,38 @@ def dedi_deposit(height):
     if height == 3:
         utils.turn_up(15)
         utils.turn_left(10)
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         utils.press_key("Use")
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         utils.turn_right(40)
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         utils.press_key("Use")
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         utils.turn_left(30)
         utils.turn_down(15)
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
 
     utils.turn_left(10)
     utils.press_key("Crouch")
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.press_key("Use")
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.turn_right(40)
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.press_key("Use")
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.turn_down(30)
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.press_key("Use")
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.turn_left(40)
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.press_key("Use")
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
     utils.press_key("Run")
     utils.turn_up(30)
     utils.turn_right(10)
-    time.sleep(0.1*settings.sleep_constant)
+    time.sleep(0.1*settings.lag_offset)
 
 def vault_deposit(items, metadata):
     side = metadata.side
@@ -71,7 +71,7 @@ def vault_deposit(items, metadata):
     else:
         turn_constant = -1
     utils.turn_right(90*turn_constant)
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     ASA.strucutres.inventory.open()
     if not template.template_await_true(template.check_template,1,"vault",0.7):
         logs.logger.error(f"{side} vault was not opened retrying now ")
@@ -79,29 +79,29 @@ def vault_deposit(items, metadata):
         utils.zero()
         utils.set_yaw(metadata.yaw)
         utils.turn_right(90*turn_constant)
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
         ASA.strucutres.inventory.open()
     if template.template_await_true(template.check_template,1,"inventory",0.7):
-        time.sleep(0.1*settings.sleep_constant)
+        time.sleep(0.1*settings.lag_offset)
         for x in range(len(items)):
             ASA.player.player_inventory.search_in_inventory(items[x])
             ASA.player.player_inventory.transfer_all_inventory()
-            time.sleep(0.3*settings.sleep_constant)
+            time.sleep(0.3*settings.lag_offset)
         ASA.strucutres.inventory.close()
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
     utils.turn_left(90*turn_constant)
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
 
 def drop_useless():
     ASA.player.player_inventory.open()
     if template.check_template("inventory",0.7):
         ASA.player.player_inventory.drop_all_inv()
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
     ASA.player.player_inventory.close()
 
 def depo_grinder(metadata):
     utils.turn_right(180)
-    time.sleep(0.5*settings.sleep_constant)
+    time.sleep(0.5*settings.lag_offset)
     ASA.strucutres.inventory.open()
     attempt = 0
     while not template.template_await_true(template.check_template,1,"grinder",0.7):
@@ -111,7 +111,7 @@ def depo_grinder(metadata):
         utils.zero()
         utils.set_yaw(metadata.yaw)
         utils.turn_right(180)
-        time.sleep(0.5*settings.sleep_constant)
+        time.sleep(0.5*settings.lag_offset)
         ASA.strucutres.inventory.open()
         if attempt >= bot.config.grinder_attempts:
             logs.logger.error(f"while trying to deposit we couldnt access grinder")
@@ -119,17 +119,17 @@ def depo_grinder(metadata):
 
     if template.check_template("grinder",0.7):
         ASA.player.player_inventory.transfer_all_inventory()
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         windows.click(variables.get_pixel_loc("dedi_withdraw_x"),variables.get_pixel_loc("dedi_withdraw_y")) #this is pressing the grind all button 
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         ASA.strucutres.inventory.close()
     template.template_await_false(template.check_template,1,"inventory",0.7)
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     utils.turn_right(180)
 
 def collect_grindables(metadata):
     utils.turn_right(90)
-    time.sleep(0.3*settings.sleep_constant) # sleep stops the grinder from opening the dedis on accident 
+    time.sleep(0.3*settings.lag_offset) # sleep stops the grinder from opening the dedis on accident 
     ASA.strucutres.inventory.open()
     attempt = 0
     while not template.template_await_true(template.check_template,1,"grinder",0.7):
@@ -139,7 +139,7 @@ def collect_grindables(metadata):
         utils.zero()
         utils.set_yaw(metadata.yaw)
         utils.turn_right(90)
-        time.sleep(0.5*settings.sleep_constant)
+        time.sleep(0.5*settings.lag_offset)
         ASA.strucutres.inventory.open()
         if attempt >= bot.config.grinder_attempts:
             logs.logger.error(f"while trying to deposit we couldnt access grinder")
@@ -147,14 +147,14 @@ def collect_grindables(metadata):
 
     if template.check_template("grinder",0.7):
         ASA.strucutres.inventory.transfer_all_from()
-        time.sleep(0.2*settings.sleep_constant)
+        time.sleep(0.2*settings.lag_offset)
         ASA.strucutres.inventory.close()
     template.template_await_false(template.check_template,1,"inventory",0.7)
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     utils.turn_left(90)
-    time.sleep(0.5*settings.sleep_constant) # stopping hitting E on the fabricator and turing it off
+    time.sleep(0.5*settings.lag_offset) # stopping hitting E on the fabricator and turing it off
     dedi_deposit(settings.height_grind)
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     drop_useless()
 
 def vaults(metadata):

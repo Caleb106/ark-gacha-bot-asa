@@ -25,7 +25,7 @@ def craft_gunpowder():
     # search for gun
     if template.check_template("chem_bench",0.7):
         ASA.strucutres.inventory.search_in_object("gun")
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         x = ASA.strucutres.inventory.inv_slots["x"]
         y = ASA.strucutres.inventory.inv_slots["y"]
         if screen.screen_resolution == 1080:
@@ -50,7 +50,7 @@ def craft_sparkpowder():
     # search for gun
     if template.check_template("chem_bench",0.7):
         ASA.strucutres.inventory.search_in_object("spark")
-        time.sleep(0.3*settings.sleep_constant)
+        time.sleep(0.3*settings.lag_offset)
         x = ASA.strucutres.inventory.inv_slots["x"]
         y = ASA.strucutres.inventory.inv_slots["y"]
         if screen.screen_resolution == 1080:
