@@ -49,10 +49,10 @@ def console_ccc():
                 break
         if is_open():
             enter_data("ccc")
-            time.sleep(0.1*settings.sleep_constant)
+            time.sleep(0.1*settings.lag_offset)
             utils.press_key("Enter")
             
-            time.sleep(0.1*settings.sleep_constant) # slow to try and prevent opening clipboard to empty data
+            time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
             win32clipboard.OpenClipboard()
             data = win32clipboard.GetClipboardData()
             win32clipboard.CloseClipboard()
@@ -77,8 +77,8 @@ def console_write(text:str):
 
     if is_open():
         enter_data(text)
-        time.sleep(0.1*settings.sleep_constant)
+        time.sleep(0.1*settings.lag_offset)
         utils.press_key("Enter")
         
-        time.sleep(0.1*settings.sleep_constant) # slow to try and prevent opening clipboard to empty data
+        time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
         

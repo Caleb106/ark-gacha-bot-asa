@@ -25,7 +25,7 @@ def open():
         if attempts >= ASA.config.inventory_open_attempts:
             logs.logger.error(f"unable to open up the players inventory")
             break
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
 
 def close():
     attempts = 0
@@ -40,29 +40,29 @@ def close():
             logs.logger.error(f"unable to close the objects inventory after {attempts} attempts") 
             #check state of the char the reason we can do it now is that the latter should spam click close inv 
             break
-    time.sleep(0.3*settings.sleep_constant)
+    time.sleep(0.3*settings.lag_offset)
 
 #these functions assume that the inventory is already open
 def search_in_inventory(item:str):
     logs.logger.debug(f"searching in inventory for {item}")
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     windows.click(variables.get_pixel_loc("search_inventory_x"),variables.get_pixel_loc("transfer_all_y")) 
     utils.ctrl_a()  
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     utils.write(item)
-    time.sleep(0.1*settings.sleep_constant)
+    time.sleep(0.1*settings.lag_offset)
 
 def drop_all_inv():  
     logs.logger.debug(f"dropping all items from our inventory ")
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     windows.click(variables.get_pixel_loc("drop_all_x"),variables.get_pixel_loc("transfer_all_y")) 
-    time.sleep(0.1*settings.sleep_constant)
+    time.sleep(0.1*settings.lag_offset)
 
 def transfer_all_inventory(): 
     logs.logger.debug(f"transfering all from our inventory into strucutre")
-    time.sleep(0.2*settings.sleep_constant)
+    time.sleep(0.2*settings.lag_offset)
     windows.click(variables.get_pixel_loc("transfer_all_inventory_x"),variables.get_pixel_loc("transfer_all_y"))
-    time.sleep(0.1*settings.sleep_constant)
+    time.sleep(0.1*settings.lag_offset)
 
 
 

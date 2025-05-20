@@ -22,7 +22,7 @@ class check_buffs():
             attempts += 1
             logs.logger.debug(f"trying to open up the buff menu {attempts} / {ASA.config.buff_open_attempts}")
             windows.click(variables.get_pixel_loc("buff_button_x"),variables.get_pixel_loc("buff_button_y"))
-            time.sleep(0.2*settings.sleep_constant)
+            time.sleep(0.2*settings.lag_offset)
 
             if attempts >= ASA.config.buff_open_attempts:
                 logs.logger.error(f"bot is unable to open up the buffs menu ")
