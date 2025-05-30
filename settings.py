@@ -1,14 +1,13 @@
 screen_resolution: int = 0 # No longer in use. Just here cause people are thoughtless.
-base_path: str = None # No longer in use. Just here cause people are thoughtless.
-lag_offset: float = 1.0
+lag_offset: int = 1 
 iguanadon: str = "GACHAIGUANADON"
 drop_off: str = "GACHADEDI"
 bed_spawn: str = "GACHARENDER"
 berry_station: str = "GACHABERRYSTATION"
 grindables: str = "GACHAGRINDABLES"
 berry_type: str = "mejoberry"
-station_yaw: float = 0.0
-render_pushout: float = 0.0
+station_yaw: int = 0
+render_pushout: int = 0
 external_berry: bool = False
 height_ele: int = 2 
 height_grind: int = 3
