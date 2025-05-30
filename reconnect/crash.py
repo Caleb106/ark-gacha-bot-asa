@@ -8,12 +8,8 @@ import logs.discordbot as discordbot
 import time 
 import windows
 from reconnect import recon_utils
-import logging
+import logs.gachalogs as logs
 
-reconnectlogs = logging.getLogger("Reconnect")
-logging_level = logging.INFO
-logging.basicConfig(filename="txt_files/logs.txt",level=logging_level,format="%(asctime)s - %(levelname)s - %(message)s",datefmt="%H:%M:%S")
-reconnectlogs.setLevel(logging_level)
 
 class crash():
     def __init__(self,hwnd):
@@ -25,7 +21,7 @@ class crash():
         titles = set(gw.getAllTitles())
         for title in titles:
             if title == "The UE-ShooterGame Game has crashed and will close" or title == "Crash!":
-                discordbot.logger("GAME HAS CRASHED")
+                logs.logger.critical("GAME HAS CRASHED")
                 return True
 
     def close_game(self):
@@ -34,13 +30,13 @@ class crash():
             process = psutil.Process(pid)
 
             process.terminate()
-            reconnectlogs.critical(f"game with pid {pid} terminated")
+            logs.logger.critical(f"game with pid {pid} terminated")
         except psutil.NoSuchProcess:
-            reconnectlogs.critical("process not found")
+            logs.logger.critical("process not found")
         except psutil.AccessDenied:
-            reconnectlogs.critical("no permissions to terminate")
+            logs.logger.critical("no permissions to terminate")
         except Exception as e:
-            reconnectlogs.critical(f"error: {e}")
+            logs.logger.critical(f"error: {e}")
 
 
     def launch_game_with_steam(self):
@@ -49,9 +45,9 @@ class crash():
         if os.path.exists(steam_path):
         
             subprocess.run([steam_path, f"steam://run/{self.appid}"])
-            reconnectlogs.critical(f"launching game with appid {self.appid} via steam")
+            logs.logger.critical(f"launching game with appid {self.appid} via steam")
         else:
-            reconnectlogs.critical("steam exe not found at the expected location cannot relaunch game")
+            logs.logger.critical("steam exe not found at the expected location cannot relaunch game")
             
     def re_open_game(self):
         self.close_game()

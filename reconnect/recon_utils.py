@@ -3,7 +3,7 @@ import numpy as np
 import settings
 import screen
 import time 
-import logs.discordbot as discordbot
+import logs.gachalogs as logs
 
 location = {
     "accept":{"start_x":1220, "start_y":958 ,"width":100 ,"height":30},
@@ -51,9 +51,9 @@ def check_template(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        #discordbot.logger(f"{item} found:{max_val}")
+        #logs.logger.template(f"{item} found:{max_val}")
         return True
-    #discordbot.logger(f"{item} not found:{max_val} threshold:{threshold}")
+    #logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 def check_template_no_bounds(item:str, threshold:float) -> bool:
@@ -82,9 +82,9 @@ def check_template_no_bounds(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        #discordbot.logger(f"{item} found:{max_val}")
+        #logs.logger.template(f"{item} found:{max_val}")
         return True
-    #discordbot.logger(f"{item} not found:{max_val} threshold:{threshold}")
+    #logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 
