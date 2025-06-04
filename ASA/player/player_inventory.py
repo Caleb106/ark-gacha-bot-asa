@@ -44,25 +44,28 @@ def close():
 
 #these functions assume that the inventory is already open
 def search_in_inventory(item:str):
-    logs.logger.debug(f"searching in inventory for {item}")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("search_inventory_x"),variables.get_pixel_loc("transfer_all_y")) 
-    utils.ctrl_a()  
-    time.sleep(0.2*settings.lag_offset)
-    utils.write(item)
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():
+        logs.logger.debug(f"searching in inventory for {item}")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("search_inventory_x"),variables.get_pixel_loc("transfer_all_y")) 
+        utils.ctrl_a()  
+        time.sleep(0.2*settings.lag_offset)
+        utils.write(item)
+        time.sleep(0.1*settings.lag_offset)
 
 def drop_all_inv():  
-    logs.logger.debug(f"dropping all items from our inventory ")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("drop_all_x"),variables.get_pixel_loc("transfer_all_y")) 
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():
+        logs.logger.debug(f"dropping all items from our inventory ")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("drop_all_x"),variables.get_pixel_loc("transfer_all_y")) 
+        time.sleep(0.1*settings.lag_offset)
 
 def transfer_all_inventory(): 
-    logs.logger.debug(f"transfering all from our inventory into strucutre")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("transfer_all_inventory_x"),variables.get_pixel_loc("transfer_all_y"))
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():
+        logs.logger.debug(f"transfering all from our inventory into strucutre")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("transfer_all_inventory_x"),variables.get_pixel_loc("transfer_all_y"))
+        time.sleep(0.1*settings.lag_offset)
 
 
 

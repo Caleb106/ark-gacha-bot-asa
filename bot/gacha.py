@@ -139,3 +139,36 @@ def collection(metadata):
         ASA.strucutres.inventory.transfer_all_from()
     ASA.strucutres.inventory.close()
     utils.turn_left(40*turn_constant)
+
+
+def drop_off_nocrop(metadata): # change reberry time or you will run out of crops
+    direction = metadata.side
+    if direction == "right":
+        turn_constant = 1
+    else:
+        turn_constant = -1
+
+    utils.turn_right(40*turn_constant)
+    time.sleep(0.2*settings.lag_offset)
+    ASA.strucutres.inventory.open()
+
+    attempt = 0
+    while not ASA.strucutres.inventory.is_open():
+        attempt += 1
+        logs.logger.debug(f"the {direction} gacha at {metadata.name} could not be accessed retrying {attempt} / {bot.config.gacha_attempts}")
+        utils.zero()
+        utils.set_yaw(metadata.yaw)
+        utils.turn_right(40*turn_constant)
+        time.sleep(0.2*settings.lag_offset)
+        ASA.strucutres.inventory.open()
+        if attempt >= bot.config.gacha_attempts:
+            logs.logger.error(f"the {direction} gacha at {metadata.name} could not be accesssed after {attempt} attempts")
+            break
+
+    if ASA.strucutres.inventory.is_open():
+        ASA.strucutres.inventory.transfer_all_from()
+        ASA.strucutres.inventory.drop_all_obj()
+        ASA.player.player_inventory.transfer_all_inventory()
+    ASA.strucutres.inventory.close()
+    time.sleep(0.2*settings.lag_offset)
+    utils.turn_left(40*turn_constant)

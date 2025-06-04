@@ -55,36 +55,40 @@ def close():
     time.sleep(0.3*settings.lag_offset)    
 #these functions assume that the inventory is already open
 def search_in_object(item:str): 
-    logs.logger.debug(f"searching in structure/dino for {item}")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("search_object_x"),variables.get_pixel_loc("transfer_all_y"))
-    utils.ctrl_a() 
-    time.sleep(0.2*settings.lag_offset)
-    utils.write(item)
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():    
+        logs.logger.debug(f"searching in structure/dino for {item}")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("search_object_x"),variables.get_pixel_loc("transfer_all_y"))
+        utils.ctrl_a() 
+        time.sleep(0.2*settings.lag_offset)
+        utils.write(item)
+        time.sleep(0.1*settings.lag_offset)
     
 def drop_all_obj():
-    logs.logger.debug(f"dropping all items from object")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("drop_all_obj_x"),variables.get_pixel_loc("transfer_all_y")) 
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():    
+        logs.logger.debug(f"dropping all items from object")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("drop_all_obj_x"),variables.get_pixel_loc("transfer_all_y")) 
+        time.sleep(0.1*settings.lag_offset)
 
 def transfer_all_from(): 
-    logs.logger.debug(f"transfering all from object")
-    time.sleep(0.2*settings.lag_offset)
-    windows.click(variables.get_pixel_loc("transfer_all_from_x"), variables.get_pixel_loc("transfer_all_y"))
-    time.sleep(0.1*settings.lag_offset)
+    if is_open():
+        logs.logger.debug(f"transfering all from object")
+        time.sleep(0.2*settings.lag_offset)
+        windows.click(variables.get_pixel_loc("transfer_all_from_x"), variables.get_pixel_loc("transfer_all_y"))
+        time.sleep(0.1*settings.lag_offset)
 
 def popcorn_top_row():
-    for count in range(6):
-        time.sleep(0.1*settings.lag_offset)
-        x = inv_slots["x"] + (count *inv_slots["distance"]) + 30 # x pos = startx + distancebetweenslots * count 
-        y = inv_slots["y"] + 30
-        if screen.screen_resolution == 1080:
-            windows.move_mouse(x * 0.75,y * 0.75)
-        else:
-            windows.move_mouse(x,y)
-        time.sleep(0.1*settings.lag_offset)
-        utils.press_key("DropItem")
+    if is_open():
+        for count in range(6):
+            time.sleep(0.1*settings.lag_offset)
+            x = inv_slots["x"] + (count *inv_slots["distance"]) + 30 # x pos = startx + distancebetweenslots * count 
+            y = inv_slots["y"] + 30
+            if screen.screen_resolution == 1080:
+                windows.move_mouse(x * 0.75,y * 0.75)
+            else:
+                windows.move_mouse(x,y)
+            time.sleep(0.1*settings.lag_offset)
+            utils.press_key("DropItem")
 
  
