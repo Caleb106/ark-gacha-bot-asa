@@ -172,3 +172,54 @@ def drop_off_nocrop(metadata): # change reberry time or you will run out of crop
     ASA.strucutres.inventory.close()
     time.sleep(0.2*settings.lag_offset)
     utils.turn_left(40*turn_constant)
+
+
+def iguanadon_gacha(metadata):
+    direction = metadata.side
+    if direction == "right":
+        turn_constant = 1
+    else:
+        turn_constant = -1
+
+    utils.turn_right(180) # turning backwards to face iguaadon
+    time.sleep(0.2*settings.lag_offset)
+
+    # put in mejos in current inventory into iguanadon should be 145 slots
+    ASA.strucutres.inventory.open()
+    if ASA.strucutres.inventory.is_open():
+        time.sleep(0.1*settings.lag_offset)
+        ASA.strucutres.inventory.drop_all_obj() # making sure iguanadon is empty 
+        ASA.strucutres.inventory.transfer_all_from() # doing this should prevent the seed not appearing first try
+        ASA.player.player_inventory.search_in_inventory(settings.berry_type) #iguanadon has 1450 weight for the 145 stacks of berries
+        ASA.player.player_inventory.transfer_all_inventory()
+        #check if mejoberries are in SECOND(which is the third slot) slot therfore we dont need to take out from our shoulder mount as we have more than 100 
+        # as after transfer all it resets any searched terms
+    ASA.strucutres.inventory.close()
+    # exit iguanadon press e to seed
+    if not template.template_await_true(template.check_template,1,"seed_inv",0.7):
+        logs.logger.debug("iguanadon seeding hasnt been spotted re adding berries")
+        ASA.strucutres.inventory.open()
+        ASA.strucutres.inventory.search_in_object(settings.berry_type)
+        ASA.strucutres.inventory.transfer_all_from()
+        ASA.player.player_inventory.search_in_inventory(settings.berry_type)
+        ASA.player.player_inventory.transfer_all_inventory()
+        ASA.strucutres.inventory.close()
+        template.template_await_true(template.check_template,1,"seed_inv",0.7)
+    utils.press_key("Use")
+    #seeding takes about a second till we can reaccess 
+    # if mejoberries not in the first slot
+        # press r to get circle menu for shoulder mount
+        # press the access inv
+        # take out 1 stack of berry from shoulder
+    
+    # we are going to be using 290 slots in the gacha - 10 extra slots allows room for pellets to be picked up by gacha
+    # you have 145 seeds alr in inv  
+    # assuming pyro is full therefore we cant use it 
+    # assuming gacha is black boxed cant use that and we cant deposit all
+    # turn around drop all on gacha while 145 seeds and depo seeds
+    # turn back to iguanadon take all we have 145 seeds 145 berrys at this point
+    # 
+    #
+    #
+    #
+    #

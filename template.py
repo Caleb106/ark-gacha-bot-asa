@@ -36,7 +36,8 @@ roi_regions = {
     "snow_owl_pellet":{"start_x":200, "start_y":150 ,"width":600 ,"height":600},
     "orange":{"start_x":705, "start_y":290 ,"width":1 ,"height":1},
     "chem_bench":{"start_x":1100, "start_y":245 ,"width":355 ,"height":70},
-    "indi_forge":{"start_x":1100, "start_y":245 ,"width":355 ,"height":70}
+    "indi_forge":{"start_x":1100, "start_y":245 ,"width":355 ,"height":70},
+    "access_inv":{"start_x":550, "start_y":450 ,"width":1670 ,"height":880}
 }
 def template_await_true(func,sleep_amount:float,*args) -> bool:
     count = 0 
@@ -115,6 +116,36 @@ def check_template_no_bounds(item:str, threshold:float) -> bool:
         return True
     logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
     return False
+
+def return_location(item:str,threshold:float): #assumes that the check for the item on the screen has already been done
+    region = roi_regions[item]
+    if screen.screen_resolution == 1440:
+        roi = screen.get_screen_roi(region["start_x"], region["start_y"], region["width"], region["height"])
+    else:
+        roi = screen.get_screen_roi(int(region["start_x"] * 0.75), int(region["start_y"] * 0.75), int(region["width"] * 0.75), int(region["height"] * 0.75))
+        
+    lower_boundary = np.array([0,0,0])
+    upper_boundary = np.array([255,255,255])
+
+    hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(roi, roi, mask= mask)
+    gray_roi = cv2.cvtColor(masked_template, cv2.COLOR_BGR2GRAY)
+
+    image = cv2.imread(f"icons{screen.screen_resolution}/{item}.png")
+    hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,lower_boundary,upper_boundary)
+    masked_template = cv2.bitwise_and(image, image, mask=mask)
+    image = cv2.cvtColor(masked_template,cv2.COLOR_BGR2GRAY)
+
+    res = cv2.matchTemplate(gray_roi, image, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+    if max_val > threshold:
+        logs.logger.template(f"{item} found:{max_val} at:{max_loc}")
+        return max_loc 
+    logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    return 0
 
 def teleport_icon(threshold:float) -> bool:
     region = roi_regions["teleporter_icon"]
@@ -297,5 +328,6 @@ def change_console_mask():
 if __name__ == "__main__":
     time.sleep(2)
     change_console_mask()
+    time.sleep(0.5)
     pass
     
