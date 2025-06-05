@@ -120,6 +120,7 @@ class render_station(base_task):
         global berry_station 
         berry_station = True # setting to true as we will be away for mostlikly for a few hours
         if bot.render.render_flag == False:
+            logs.logger.debug(f"render flag:{bot.render.render_flag} we are trying to get into the pod now")
             player_state.reset_state()
             teleporter.teleport_not_default(settings.bed_spawn)
             bot.render.enter_tekpod()
