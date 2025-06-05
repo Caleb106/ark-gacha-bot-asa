@@ -168,8 +168,8 @@ def vaults(metadata):
         vault_deposit(items,metadata)
 
 def deposit_all(metadata):
-    utils.pitch_zero()
-    utils.set_yaw(metadata.yaw)
+    #utils.pitch_zero()
+    #utils.set_yaw(metadata.yaw) # its done this in the tp part to the dedis
     logs.logger.debug("opening crystals")
     open_crystals()
     logs.logger.debug("depositing in ele dedi")
