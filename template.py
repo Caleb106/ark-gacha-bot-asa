@@ -245,8 +245,8 @@ def check_teleporter_orange():
     else:
         roi = screen.get_screen_roi(int(region["start_x"] * 0.75), int(region["start_y"] * 0.75), int(region["width"]), int(region["height"]))
 
-    lower_boundary = np.array([5,211,88])
-    upper_boundary = np.array([25,255,168])
+    lower_boundary = np.array([10,211,50])
+    upper_boundary = np.array([15,255,100])
 
     hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
     pixel_hsv = hsv[0, 0]
@@ -327,7 +327,8 @@ def change_console_mask():
 
 if __name__ == "__main__":
     time.sleep(2)
-    change_console_mask()
+    #change_console_mask()
+    print(check_teleporter_orange())
     time.sleep(0.5)
     pass
     
