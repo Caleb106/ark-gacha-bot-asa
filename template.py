@@ -325,10 +325,29 @@ def change_console_mask():
     average = np.mean(gray_roi)
     set_bounds((average - 5), (average + 5))
 
+def output_hsv():
+    print("outputs hsv colours so you can change the bounds of functions")
+    region = roi_regions["orange"]
+    if screen.screen_resolution == 1440:
+        roi = screen.get_screen_roi(region["start_x"], region["start_y"], region["width"], region["height"])
+    else:
+        roi = screen.get_screen_roi(int(region["start_x"] * 0.75), int(region["start_y"] * 0.75), int(region["width"]), int(region["height"]))
+
+    hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
+    print(f"{hsv[0, 0]} -> for orange teleporter lines 248 and 249") 
+    if screen.screen_resolution == 1440:
+        roi = screen.get_screen_roi(0,1419,2560,2)
+    else:
+        roi = screen.get_screen_roi(0,1059,1920,2)
+    gray_roi = cv2.cvtColor(console_strip_bottom(), cv2.COLOR_BGR2GRAY)
+    average = np.mean(gray_roi)
+    print(f"if console was open the average console colour was : {average} go to console.json and set +and - 5 from this in the respected section IE upperbound = average+5 ")
+    input("") # keeps script open for user to edit there files
+
 if __name__ == "__main__":
     time.sleep(2)
     #change_console_mask()
-    print(check_teleporter_orange())
+    output_hsv()
     time.sleep(0.5)
     pass
     
