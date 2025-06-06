@@ -153,7 +153,8 @@ async def start(interaction: discord.Interaction):
     await interaction.response.send_message(f"starting up bot now you have 5 seconds before start")
     time.sleep(5)
     running_tasks.append(asyncio.create_task(botoptions.task_manager_start()))
-    time.sleep(5)
+    while task_manager.started == False:
+        await asyncio.sleep(1)
     running_tasks.append(bot.loop.create_task(embed_send("active_queue")))
     running_tasks.append(bot.loop.create_task(embed_send("waiting_queue")))
     

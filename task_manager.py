@@ -6,7 +6,8 @@ import logs.gachalogs as logs
 from threading import Lock, Thread 
 
 global scheduler
-
+global started
+started = False
 class SingletonMeta(type):
 
     _instances = {}
@@ -149,6 +150,7 @@ def load_resolution_data(file_path):
 
 def main():
     global scheduler
+    global started
     scheduler = task_scheduler()
     
     pego_data = load_resolution_data("json_files/pego.json")
@@ -174,6 +176,7 @@ def main():
         
     scheduler.add_task(stations.render_station())
     logs.logger.info("scheduler now running")
+    started = True
     scheduler.run()
 
 if __name__ == "__main__":
