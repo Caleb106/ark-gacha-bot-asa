@@ -45,7 +45,7 @@ def spawn_in(bed_name:str):
         time.sleep(0.2*settings.lag_offset)
         windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y"))
 
-        if not template.template_await_true(template.check_template,1,"ready_clicked_bed",0.7): # waiting for the bed to appear as ready to spawn in
+        if not template.template_await_true(template.check_teleporter_orange,3): # waiting for the bed to appear as ready to spawn in
             logs.logger.error(f"the bed char tried spawning on is not in the ready state or cant be found exiting out of bed screen now")
             close()
             return    # no need to continue with this therefore we should just leave func     
