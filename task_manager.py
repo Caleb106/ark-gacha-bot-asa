@@ -1,8 +1,8 @@
 import heapq
 import time
 import json
-import bot.stations as stations
-import logs.gachalogs as logs
+import source.gacha_bot.stations as stations
+import source.logs.gachalogs as logs
 from threading import Lock, Thread 
 
 global scheduler

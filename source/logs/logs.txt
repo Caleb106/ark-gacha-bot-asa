@@ -1,0 +1,127 @@
+23:20:26 - DEBUG - open - trying to open strucuture inventory 1 / 3
+23:20:27 - DEBUG - open - inventory opened
+23:20:27 - DEBUG - open - waiting for up too 10 seconds due to the reciving remote inventory is present
+23:20:27 - DEBUG - open - 0.16571259498596191 seconds taken for the reciving remote inventory to go away
+23:20:55 - DEBUG - open - trying to open strucuture inventory 1 / 3
+23:20:55 - DEBUG - open - inventory opened
+23:20:55 - DEBUG - open - waiting for up too 10 seconds due to the reciving remote inventory is present
+23:20:55 - DEBUG - open - 0.10177135467529297 seconds taken for the reciving remote inventory to go away
+23:21:25 - DEBUG - open - trying to open strucuture inventory 1 / 3
+23:21:25 - DEBUG - open - inventory opened
+23:21:25 - DEBUG - open - waiting for up too 10 seconds due to the reciving remote inventory is present
+23:21:25 - DEBUG - open - 0.1496410369873047 seconds taken for the reciving remote inventory to go away
+23:22:24 - DEBUG - open - trying to open strucuture inventory 1 / 3
+23:22:25 - DEBUG - open - inventory opened
+23:12:56 - DEBUG - __init__ - Using proactor: IocpProactor
+23:12:56 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:12:56 - INFO - login - logging in using static token
+23:12:58 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 6e42524a8bf766819c403a4a3b493d1f).
+23:14:13 - DEBUG - __init__ - Using proactor: IocpProactor
+23:14:13 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:14:13 - INFO - login - logging in using static token
+23:14:14 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: a1543e3ad96472b0cae45af38cb1ae18).
+23:16:25 - DEBUG - __init__ - Using proactor: IocpProactor
+23:16:25 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:16:25 - INFO - login - logging in using static token
+23:16:26 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: f8818afcdd4e1af641f731f157a1d89a).
+23:21:38 - DEBUG - __init__ - Using proactor: IocpProactor
+23:21:38 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:21:38 - INFO - login - logging in using static token
+23:21:39 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 9c47ce516e2877732940850dbb3d7536).
+23:25:51 - DEBUG - __init__ - Using proactor: IocpProactor
+23:25:51 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:25:51 - INFO - login - logging in using static token
+23:25:53 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 65b338231e55a2ee04a2a6ec959bacca).
+23:29:16 - DEBUG - __init__ - Using proactor: IocpProactor
+23:29:16 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:29:16 - INFO - login - logging in using static token
+23:29:17 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 6d1b8a62c401800e8884e7bae122d318).
+23:30:31 - DEBUG - __init__ - Using proactor: IocpProactor
+23:30:31 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:30:31 - INFO - login - logging in using static token
+23:30:32 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 89be03606fdc74b21a32327e9a152b66).
+23:39:57 - DEBUG - __init__ - Using proactor: IocpProactor
+23:39:57 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:39:57 - INFO - login - logging in using static token
+23:39:58 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: ba6b3d918729fd9b3b6a7698c02003a8).
+23:40:00 - ERROR - on_error - Ignoring exception in on_ready
+Traceback (most recent call last):
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 441, in _run_event
+    await coro(*args, **kwargs)
+  File "d:\ark v2\ark-gacha-bot-asa\main1.py", line 21, in on_ready
+    await bot.tree.sync()
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\tree.py", line 1072, in sync
+    raise CommandSyncFailure(e, commands) from None
+discord.app_commands.errors.CommandSyncFailure: Failed to upload commands to Discord (HTTP status 400, error code 50035)
+In command 'change_resource' defined in function 'dedi_commands.list_dedi'
+  In parameter 'dediID'
+    name: Command name is invalid
+23:40:52 - DEBUG - __init__ - Using proactor: IocpProactor
+23:40:52 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:40:52 - INFO - login - logging in using static token
+23:40:53 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: c7b30738d10181322635c996b1130673).
+23:40:55 - ERROR - on_error - Ignoring exception in on_ready
+Traceback (most recent call last):
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\client.py", line 441, in _run_event
+    await coro(*args, **kwargs)
+  File "d:\ark v2\ark-gacha-bot-asa\main1.py", line 21, in on_ready
+    await bot.tree.sync()
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\tree.py", line 1072, in sync
+    raise CommandSyncFailure(e, commands) from None
+discord.app_commands.errors.CommandSyncFailure: Failed to upload commands to Discord (HTTP status 400, error code 50035)
+In command 'change_resource' defined in function 'dedi_commands.change_resource'
+  In parameter 'dediID'
+    name: Command name is invalid
+23:42:26 - DEBUG - __init__ - Using proactor: IocpProactor
+23:42:26 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:42:26 - INFO - login - logging in using static token
+23:42:27 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 74b744c394d2c191a3f8a0f9959484a0).
+23:43:09 - ERROR - on_error - Ignoring exception in command 'change_resource'
+Traceback (most recent call last):
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 827, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\ark v2\ark-gacha-bot-asa\source\discord_commands\dedi_commands.py", line 64, in change_resource
+    if dediID == data[x]["dediID"]:
+       ^^^^^^
+NameError: name 'dediID' is not defined
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\tree.py", line 1248, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 853, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Caleb\AppData\Local\Programs\Python\Python311\Lib\site-packages\discord\app_commands\commands.py", line 846, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'change_resource' raised an exception: NameError: name 'dediID' is not defined
+23:43:28 - DEBUG - __init__ - Using proactor: IocpProactor
+23:43:28 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:43:28 - INFO - login - logging in using static token
+23:43:28 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 988dbf67d0d1f747e411f4473bd7cb18).
+23:44:41 - DEBUG - __init__ - Using proactor: IocpProactor
+23:44:41 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:44:41 - INFO - login - logging in using static token
+23:44:42 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 014a855afda1ac394f1343254afe0a15).
+23:45:53 - DEBUG - __init__ - Using proactor: IocpProactor
+23:45:53 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:45:53 - INFO - login - logging in using static token
+23:45:54 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 01f4cbefad8b994b7774604b79040806).
+23:47:57 - DEBUG - __init__ - Using proactor: IocpProactor
+23:47:57 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:47:57 - INFO - login - logging in using static token
+23:47:58 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: d65f79e0fc58d923ba97d2ed3f950cc6).
+23:51:09 - DEBUG - __init__ - Using proactor: IocpProactor
+23:51:09 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:51:09 - INFO - login - logging in using static token
+23:51:10 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: e9df4087235b89742ee3c1aa0e825e1b).
+23:52:08 - DEBUG - __init__ - Using proactor: IocpProactor
+23:52:08 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:52:08 - INFO - login - logging in using static token
+23:52:09 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 9844112d4643f00bdee0343c9c30fc25).
+23:54:00 - DEBUG - __init__ - Using proactor: IocpProactor
+23:54:00 - WARNING - _async_setup_hook - Privileged message content intent is missing, commands may not work as expected.
+23:54:00 - INFO - login - logging in using static token
+23:54:01 - INFO - received_message - Shard ID None has connected to Gateway (Session ID: 4c277e71f692e1b0dc5ce6d3b2931e66).
