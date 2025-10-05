@@ -11,3 +11,4 @@ pywin32
 psutil
 python-dotenv
 pydirectinput
+audioop-lts
