@@ -48,7 +48,6 @@ async def post_activity(bot: discord.Client):
         ch = bot.get_channel(getattr(settings, "log_channel_gacha", 0))
         if not ch:
             return
-        # snapshot and trim
         lines = task_manager.EVENT_LOG.tail(MAX_EVENTS)
         if not lines:
             return
