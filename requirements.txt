@@ -10,3 +10,4 @@ discord.py==2.3.2
 pywin32
 psutil
 python-dotenv
+pydirectinput
