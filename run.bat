@@ -1,4 +1,4 @@
-@echo off
+@echo off 
 setlocal EnableExtensions
 
 cd /d "%~dp0"
@@ -44,6 +44,10 @@ call "venv\Scripts\activate.bat" || (
     pause
     exit /b
 )
+
+:: Ensure deps are present on every run (handles machines missing pydirectinput, etc.)
+echo Ensuring dependencies are installed...
+python -m pip install -r requirements.txt
 
 echo Running main.py...
 "venv\Scripts\python.exe" "%CD%\main.py"
