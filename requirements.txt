@@ -1,7 +1,12 @@
-numpy 
+numpy
 opencv-python
-mss 
-pyautogui 
-discord.py==2.3.2 
-pywin32 
+mss
+# Input backends (conditional)
+pyautogui<=0.9.54; python_version < "3.13"
+pydirectinput; python_version >= "3.13"
+pillow
+pygetwindow
+discord.py==2.3.2
+pywin32
 psutil
+python-dotenv
