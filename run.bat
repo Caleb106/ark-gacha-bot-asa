@@ -1,4 +1,8 @@
 @echo off
+setlocal EnableExtensions
+
+:: Always run relative to this script’s folder
+cd /d "%~dp0"
 
 :: Specify the required Python version
 set "PYTHON_VERSION=3.11"
@@ -16,7 +20,6 @@ if errorlevel 1 (
     "%USERPROFILE%\AppData\Local\Temp\python-3.11.1.exe"
     pause
     echo Please press any button once you have completed the python setup, so we can continue installing the depedencies.
-
 ) else (
     echo Python is already installed. Please make sure its of version 3.10 or higher, using an older version will NOT work!
 )
@@ -26,7 +29,7 @@ git pull origin main
 git pull
 
 :: Check if virtual environment exists
-if not exist "venv" (
+if not exist "venv\Scripts\python.exe" (
     echo Virtual environment not found. Creating a new one using Python %PYTHON_VERSION%...
     py -%PYTHON_VERSION% -m venv venv
     if errorlevel 1 (
@@ -38,15 +41,15 @@ if not exist "venv" (
 
     :: Install dependencies immediately after creating the venv
     echo Installing dependencies from requirements.txt...
-    call venv\Scripts\activate.bat
+    call "venv\Scripts\activate.bat"
     python -m pip install --upgrade pip
     python -m pip install -r requirements.txt
-    deactivate
+    if exist "venv\Scripts\deactivate.bat" call "venv\Scripts\deactivate.bat"
 )
 
 :: Activate the virtual environment
 echo Activating virtual environment...
-call venv\Scripts\activate.bat
+call "venv\Scripts\activate.bat"
 if errorlevel 1 (
     echo Failed to activate virtual environment. Please activate it manually using:
     echo venv\Scripts\activate
@@ -54,12 +57,13 @@ if errorlevel 1 (
     exit /b
 )
 
-:: Run the main Python script
+:: Run the main Python script using the venv interpreter
 echo Running main.py...
-python main.py
+"venv\Scripts\python.exe" "%CD%\main.py"
 
 :: Deactivate virtual environment
 echo Deactivating virtual environment...
-deactivate
+if exist "venv\Scripts\deactivate.bat" call "venv\Scripts\deactivate.bat"
 
 pause
+endlocal
