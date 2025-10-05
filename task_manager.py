@@ -4,7 +4,7 @@ from pathlib import Path
 from threading import Lock
 import logs.gachalogs as logs
 
-# settings import tolerant to cwd
+# resolve paths and import settings robustly
 HERE = Path(__file__).resolve().parent
 for p in (HERE, HERE.parent):
     s = str(p)
@@ -97,7 +97,7 @@ class Task:
 
 # -------- render task --------
 class RenderRouteTask(Task):
-    """One full render pass; returns to bed and rests; then reschedules itself."""
+    """One full render pass; returns to bed and rests; then requeues itself."""
     def __init__(self, route_json: str = "render_route.json", dwell_s: int | None = None, priority: int | None = None):
         dwell = dwell_s if dwell_s is not None else getattr(settings, "render_dwell_seconds", 25)
         prio  = priority if priority is not None else getattr(settings, "render_priority", 3)
@@ -105,14 +105,38 @@ class RenderRouteTask(Task):
         self.name = "render"
         self._route_json = route_json
         self._dwell = int(dwell)
+
     def _load_route(self):
-        path = os.environ.get("RENDER_ROUTE_JSON", self._route_json)
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception as e:
-            logs.logger.error(f"render route load failed: {e}")
-            return []
+        env_path = os.environ.get("RENDER_ROUTE_JSON", "").strip()
+        candidates = []
+        if env_path:
+            candidates.append(env_path)
+
+        cwd = Path.cwd()
+        repo_root = HERE.parent
+
+        candidates += [
+            str(cwd / "render_route.json"),
+            str(cwd / "json_files" / "render_route.json"),
+            str(repo_root / "render_route.json"),
+            str(repo_root / "json_files" / "render_route.json"),
+        ]
+
+        tried = []
+        for p in candidates:
+            if not p:
+                continue
+            tried.append(p)
+            if os.path.exists(p):
+                try:
+                    with open(p, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception as e:
+                    logs.logger.error(f"render route load failed reading {p}: {e}")
+                    return []
+        logs.logger.error(f"render route not found. tried: {tried}")
+        return []
+
     def execute(self):
         if not _HAS_RENDER_ROUTE:
             logs.logger.error("bot.render_route not available")
@@ -179,14 +203,18 @@ class task_scheduler:
 # -------- entry --------
 scheduler: task_scheduler | None = None
 started = False
+
 def main():
     global scheduler, started
     if scheduler is None:
         scheduler = task_scheduler()
-    render_only  = bool(getattr(settings, "render_only", True))
+
+    render_only   = bool(getattr(settings, "render_only", True))
     enable_render = bool(getattr(settings, "enable_render", True))
+
     if enable_render or render_only:
         scheduler.add_task(RenderRouteTask())
+
     logs.logger.info("scheduler running")
     started = True
     scheduler.run()
@@ -194,3 +222,5 @@ def main():
 if __name__ == "__main__":
     time.sleep(1.0)
     main()
+
+
