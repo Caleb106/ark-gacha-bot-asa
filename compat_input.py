@@ -1,9 +1,7 @@
 # compat_input.py
-import sys
-
-if sys.version_info >= (3, 13):
+try:
     import pydirectinput as pyautogui
-else:
+except Exception:
     import pyautogui
 
 pyautogui.PAUSE = 0.0
