@@ -1,14 +1,17 @@
 numpy
 opencv-python
 mss
-# Input backends (conditional)
-pyautogui<=0.9.54; python_version < "3.13"
-pydirectinput; python_version >= "3.13"
 pillow
 pygetwindow
-discord.py==2.3.2
 pywin32
 psutil
 python-dotenv
-pydirectinput
-audioop-lts
+
+discord.py==2.3.2
+
+# Input backends
+pyautogui<=0.9.54; python_version < "3.13"
+pydirectinput; python_version >= "3.13"
+
+# Python 3.13 stdlib removals
+audioop-lts; python_version >= "3.13"
