@@ -1,186 +1,196 @@
-import heapq
-import time
-import json
-import bot.stations as stations
+from __future__ import annotations
+import heapq, json, os, sys, time
+from pathlib import Path
+from threading import Lock
 import logs.gachalogs as logs
-from threading import Lock, Thread 
 
-global scheduler
-global started
-started = False
-class SingletonMeta(type):
+# settings import tolerant to cwd
+HERE = Path(__file__).resolve().parent
+for p in (HERE, HERE.parent):
+    s = str(p)
+    if s not in sys.path:
+        sys.path.insert(0, s)
+import settings  # type: ignore
 
-    _instances = {}
+# optional render route runner
+try:
+    from bot import render_route
+    _HAS_RENDER_ROUTE = True
+except Exception:
+    _HAS_RENDER_ROUTE = False
 
-    _lock: Lock = Lock()
+# -------- activity feed --------
+class _Activity:
+    def __init__(self, maxlen=200):
+        self._buf = []
+        self._mx = int(maxlen)
+        self._lock = Lock()
+    def add(self, s: str):
+        with self._lock:
+            ts = time.strftime("%H:%M:%S")
+            self._buf.append(f"[{ts}] {s}")
+            if len(self._buf) > self._mx:
+                self._buf = self._buf[-self._mx:]
+    def tail(self, n: int):
+        with self._lock:
+            return self._buf[-n:]
 
-    def __call__(cls,*args,**kwargs):
+EVENT_LOG = _Activity()
 
-        with cls._lock:
-            if cls not in cls._instances:
-                instance = super().__call__(*args,**kwargs)
-                cls._instances[cls] = instance
-        return cls._instances[cls]
-
+# -------- queues --------
 class priority_queue_exc:
     def __init__(self):
-        self.queue = []  
-
-    def add(self, task, priority, execution_time):
-        heapq.heappush(self.queue, (execution_time, len(self.queue), priority, task))
-
-    def pop(self):
-        if not self.is_empty():
-            return heapq.heappop(self.queue)
-        return None
-
+        self.queue: list[tuple[float,int,int,Task]] = []
+        self._counter = 0
+        self._lock = Lock()
+    def add(self, task: "Task", priority: int, execution_time: float):
+        with self._lock:
+            heapq.heappush(self.queue, (float(execution_time), self._counter, int(priority), task))
+            self._counter += 1
+    def pop_ready(self, now: float):
+        out = []
+        with self._lock:
+            while self.queue and self.queue[0][0] <= now:
+                out.append(heapq.heappop(self.queue))
+        return out
     def peek(self):
-        if not self.is_empty():
-            return self.queue[0]
-        return None
-
+        with self._lock:
+            return self.queue[0] if self.queue else None
     def is_empty(self):
-        return len(self.queue) == 0
-    
+        with self._lock:
+            return not self.queue
+
 class priority_queue_prio:
     def __init__(self):
-        self.queue = []  
-
-    def add(self, task, priority, execution_time):
-        heapq.heappush(self.queue, (priority, execution_time, len(self.queue), task))
-
+        self.queue: list[tuple[int,float,int,Task]] = []
+        self._counter = 0
+        self._lock = Lock()
+    def add(self, task: "Task", priority: int, enqueue_time: float):
+        with self._lock:
+            heapq.heappush(self.queue, (int(priority), float(enqueue_time), self._counter, task))
+            self._counter += 1
     def pop(self):
-        if not self.is_empty():
+        with self._lock:
+            if not self.queue:
+                return None
             return heapq.heappop(self.queue)
-        return None
-
     def peek(self):
-        if not self.is_empty():
-            return self.queue[0]
-        return None
-
+        with self._lock:
+            return self.queue[0] if self.queue else None
     def is_empty(self):
-        return len(self.queue) == 0
+        with self._lock:
+            return not self.queue
 
-class task_scheduler(metaclass=SingletonMeta):
+# -------- task base --------
+class Task:
+    name: str = "task"
+    def __init__(self, priority: int = 3, interval_s: int = 0):
+        self._priority = int(priority)
+        self._interval_s = int(interval_s)
+        self.has_run_before = False
+    def execute(self):  # override
+        raise NotImplementedError
+    def get_requeue_delay(self) -> int:
+        return max(0, self._interval_s)
+    def get_priority_level(self) -> int:
+        return self._priority
+
+# -------- render task --------
+class RenderRouteTask(Task):
+    """One full render pass; returns to bed and rests; then reschedules itself."""
+    def __init__(self, route_json: str = "render_route.json", dwell_s: int | None = None, priority: int | None = None):
+        dwell = dwell_s if dwell_s is not None else getattr(settings, "render_dwell_seconds", 25)
+        prio  = priority if priority is not None else getattr(settings, "render_priority", 3)
+        super().__init__(priority=int(prio), interval_s=int(getattr(settings, "render_rest_seconds", 2700)))
+        self.name = "render"
+        self._route_json = route_json
+        self._dwell = int(dwell)
+    def _load_route(self):
+        path = os.environ.get("RENDER_ROUTE_JSON", self._route_json)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            logs.logger.error(f"render route load failed: {e}")
+            return []
+    def execute(self):
+        if not _HAS_RENDER_ROUTE:
+            logs.logger.error("bot.render_route not available")
+            return
+        route = self._load_route()
+        if not route:
+            msg = "render route empty"
+            logs.logger.warning(msg)
+            EVENT_LOG.add(msg)
+            return
+        EVENT_LOG.add(f"Render start [{len(route)} stops], dwell={self._dwell}s")
+        render_route.run(route, dwell_s=self._dwell, loop=False, end_at_bed=True)
+        EVENT_LOG.add("Render pass finished; resting")
+
+# -------- scheduler --------
+class task_scheduler:
     def __init__(self):
-        if not hasattr(self, 'initialized'):  
-            self.active_queue = priority_queue_prio() 
-            self.waiting_queue = priority_queue_exc()  
-            self.initialized = True 
-            self.prev_task_name = ""
-
-    def add_task(self, task):
-        
-        if not getattr(task, 'has_run_before', False):
-            next_execution_time = time.time()  
+        self.active_queue = priority_queue_prio()
+        self.waiting_queue = priority_queue_exc()
+        self.prev_task_name = ""
+    def add_task(self, task: Task):
+        if not task.has_run_before:
+            enqueue = time.time()
+            task.has_run_before = True
         else:
-            next_execution_time = time.time() + task.get_requeue_delay()  
-
-        task.has_run_before = True
-    
-        self.waiting_queue.add(task, task.get_priority_level(), next_execution_time)
-        print(f"Added task {task.name} to waiting queue ") # might need to remove this if you have LOADS OF stations causing long messages
-
-            
+            enqueue = time.time() + task.get_requeue_delay()
+        self.waiting_queue.add(task, task.get_priority_level(), enqueue)
+        EVENT_LOG.add(f"Queued: {task.name} (prio {task.get_priority_level()})")
+        logs.logger.debug(f"added task {task.name} to waiting queue")
+    def _requeue(self, task: Task):
+        self.waiting_queue.add(task, task.get_priority_level(), time.time() + task.get_requeue_delay())
+        EVENT_LOG.add(f"Re-queued: {task.name} (+{task.get_requeue_delay()}s)")
     def run(self):
         while True:
-            current_time = time.time()
-
-            self.move_ready_tasks_to_active_queue(current_time)
-            
+            now = time.time()
+            for exec_time, _, prio, task in self.waiting_queue.pop_ready(now):
+                self.active_queue.add(task, prio, exec_time)
+                EVENT_LOG.add(f"Ready: {task.name}")
             if not self.active_queue.is_empty():
-                self.execute_task(current_time)
+                prio, enq_ts, _, task = self.active_queue.pop()
+                if enq_ts <= now:
+                    if task.name != self.prev_task_name:
+                        logs.logger.info(f"Executing task: {task.name}")
+                    EVENT_LOG.add(f"Executing: {task.name}")
+                    try:
+                        task.execute()
+                        EVENT_LOG.add(f"Completed: {task.name}")
+                    except Exception as e:
+                        logs.logger.error(f"Task '{task.name}' failed: {e}")
+                        EVENT_LOG.add(f"Failed: {task.name} -> {e}")
+                    self.prev_task_name = task.name
+                    if task.name != "pause":
+                        self._requeue(task)
+                else:
+                    self.active_queue.add(task, prio, enq_ts)
             else:
-                time.sleep(5)
+                peek = self.waiting_queue.peek()
+                if peek:
+                    sleep_for = max(0.2, peek[0] - now)
+                    time.sleep(min(sleep_for, 10.0))
+                else:
+                    time.sleep(0.5)
 
-    def move_ready_tasks_to_active_queue(self, current_time):
-        
-        while not self.waiting_queue.is_empty():
-            task_tuple = self.waiting_queue.peek()
-            exec_time, _, priority, task = task_tuple
-
-            if exec_time <= current_time:
-                self.waiting_queue.pop()  
-                self.active_queue.add(task, priority, exec_time)  
-                
-            else:
-                break  
-
-    def execute_task(self, current_time):
-        
-        task_tuple = self.active_queue.pop()  
-        exec_time,priority , _, task = task_tuple
-
-        if exec_time <= current_time:
-            
-            if task.name != self.prev_task_name:
-                logs.logger.info(f"Executing task: {task.name}")
-            task.execute()  
-            
-            self.prev_task_name = task.name
-            if task.name != "pause":
-                self.move_to_waiting_queue(task)
-            else:
-                print("pause task skipping adding back ")
-        else:
-            
-            self.active_queue.add(task, priority, exec_time)
-
-    def move_to_waiting_queue(self, task):
-        logs.logger.debug(f"adding {task.name} to waiting queue" ) 
-        next_execution_time = time.time() + task.get_requeue_delay()
-        priority_level = task.get_priority_level()
-        self.waiting_queue.add(task,priority_level , next_execution_time)
-
-
-
-def load_resolution_data(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            data = file.read().strip()
-            if not data:
-                logs.logger.warning(f"warning: {file_path} is empty no tasks added.")
-                return []
-            return json.loads(data)
-    except (json.JSONDecodeError, FileNotFoundError) as e:
-        print(f"error loading JSON from {file_path}: {e}")
-        return []
-
-
+# -------- entry --------
+scheduler: task_scheduler | None = None
+started = False
 def main():
-    global scheduler
-    global started
-    scheduler = task_scheduler()
-    
-    pego_data = load_resolution_data("json_files/pego.json")
-    for entry_pego in pego_data:
-        name = entry_pego["name"]
-        teleporter = entry_pego["teleporter"]
-        delay = entry_pego["delay"]
-        task = stations.pego_station(name,teleporter,delay)
-        scheduler.add_task(task)
-
-    gacha_data = load_resolution_data("json_files/gacha.json")
-    for entry_gacha in gacha_data:
-        name = entry_gacha["name"]
-        teleporter = entry_gacha["teleporter"]
-        direction = entry_gacha["side"]
-        resource = entry_gacha["resource_type"]
-        if resource == "collect":
-            depo = entry_gacha["depo_tp"]
-            task = stations.snail_pheonix(name,teleporter,direction,depo)
-        else:
-            task = stations.gacha_station(name, teleporter, direction)
-        scheduler.add_task(task)
-        
-    scheduler.add_task(stations.render_station())
-    logs.logger.info("scheduler now running")
+    global scheduler, started
+    if scheduler is None:
+        scheduler = task_scheduler()
+    render_only  = bool(getattr(settings, "render_only", True))
+    enable_render = bool(getattr(settings, "enable_render", True))
+    if enable_render or render_only:
+        scheduler.add_task(RenderRouteTask())
+    logs.logger.info("scheduler running")
     started = True
     scheduler.run()
 
 if __name__ == "__main__":
-    time.sleep(2)
+    time.sleep(1.0)
     main()
-
-

@@ -28,15 +28,17 @@ data = {
     "inv_slot_end_y": 435,
     "buff_button_x": 1280,
     "buff_button_y": 1180,
-    "drop_all_obj_x":1978,
+    "drop_all_obj_x": 1978,
     "back_button_tp_x": 240,
     "back_button_tp_y": 1285
 }
 
 def get_pixel_loc(location):
+    base = data.get(location)
     if screen.screen_resolution == 1080:
-        return round(data.get(location) * 0.75)
-    else:
-        return data.get(location)
- 
-
+        base = round(base * 0.75)  # keep your 1080 scaling
+    # center offset for 3440×1440
+    if screen.screen_resolution == 1440 and screen.mon["width"] > 2560:
+        if location.endswith("_x"):
+            return base + screen.ultra_offset_x
+    return base

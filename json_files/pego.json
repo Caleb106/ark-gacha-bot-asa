@@ -1,113 +1,113 @@
 [
     {
-        "name": "pego1",
+        "name": "Pego1",
         "teleporter": "PEGO #01",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego2",
+        "name": "Pego2",
         "teleporter": "PEGO #02",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego3",
+        "name": "Pego3",
         "teleporter": "PEGO #03",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego4",
+        "name": "Pego4",
         "teleporter": "PEGO #04",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego5",
+        "name": "Pego5",
         "teleporter": "PEGO #05",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego6",
+        "name": "Pego6",
         "teleporter": "PEGO #06",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego7",
+        "name": "Pego7",
         "teleporter": "PEGO #07",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego8",
+        "name": "Pego8",
         "teleporter": "PEGO #08",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego9",
+        "name": "Pego9",
         "teleporter": "PEGO #09",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego10",
+        "name": "Pego10",
         "teleporter": "PEGO #10",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego11",
+        "name": "Pego11",
         "teleporter": "PEGO #11",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego12",
+        "name": "Pego12",
         "teleporter": "PEGO #12",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego13",
+        "name": "Pego13",
         "teleporter": "PEGO #13",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego14",
+        "name": "Pego14",
         "teleporter": "PEGO #14",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego15",
+        "name": "Pego15",
         "teleporter": "PEGO #15",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego16",
+        "name": "Pego16",
         "teleporter": "PEGO #16",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego17",
+        "name": "Pego17",
         "teleporter": "PEGO #17",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego18",
+        "name": "Pego18",
         "teleporter": "PEGO #18",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego19",
+        "name": "Pego19",
         "teleporter": "PEGO #19",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego20",
+        "name": "Pego20",
         "teleporter": "PEGO #20",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego21",
+        "name": "Pego21",
         "teleporter": "PEGO #21",
-        "delay": 4800
+        "delay": 5200
     },
     {
-        "name": "pego22",
+        "name": "Pego22",
         "teleporter": "PEGO #22",
-        "delay": 4800
+        "delay": 5200
     }
 
 ]

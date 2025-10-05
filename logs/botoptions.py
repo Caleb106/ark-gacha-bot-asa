@@ -1,18 +1,22 @@
-import logs.gachalogs 
 import asyncio
-import typing 
 import functools
+import typing
+
+import logs.gachalogs as logs
+import settings
+import discordbot
 import task_manager
 
-#Use this for commands that take a long time to respond to prevent bot from disconnecting.
-async def run_blocking(blocking_func: typing.Callable, *args, **kwargs) -> typing.Any:
-    func = functools.partial(blocking_func,*args, **kwargs)
-    return await asyncio.to_thread(func)
+async def run_blocking(func: typing.Callable, *args, **kwargs):
+    return await asyncio.to_thread(functools.partial(func, *args, **kwargs))
 
 async def task_manager_start():
-    logs.gachalogs.logger.debug(f"task_manager_start initiated")
+    logs.logger.debug("task_manager_start initiated")
     await run_blocking(task_manager.main)
 
-
-if __name__ =="__main__":
-    pass
+async def reporting_loop(bot):
+    interval = int(getattr(settings, "queue_post_interval", 60))
+    while True:
+        await discordbot.post_queues(bot)
+        await discordbot.post_activity(bot)
+        await asyncio.sleep(max(10, interval))
