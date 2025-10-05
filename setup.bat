@@ -2,46 +2,42 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 
+:: Target Python
+set "PYTHON_VERSION=3.13"
+set "PYTHON_INSTALLER=3.13.0"
+
 cd
 
-:: check if python is installed
 >nul 2>nul assoc .py
-
 if errorlevel 1 (
-    :: python is not installed
     echo Python not installed, downloading installer...
-    powershell -c "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.1/python-3.11.1-amd64.exe' -OutFile '%USERPROFILE%\AppData\Local\Temp\python-3.11.1.exe'"
-    echo Launching installer, please make sure to follow the correct setup instructions Adding python to environment variables!
-    echo:
-
-    "%USERPROFILE%\AppData\Local\Temp\python-3.11.1.exe"
+    powershell -c "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/%PYTHON_INSTALLER%/python-%PYTHON_INSTALLER%-amd64.exe' -OutFile '%TEMP%\python-%PYTHON_INSTALLER%.exe'"
+    echo Launching installer. Be sure to add Python to PATH.
+    "%TEMP%\python-%PYTHON_INSTALLER%.exe"
     pause
-    echo Please press any button once you have completed the python setup, so we can continue installing the depedencies.
-
+    echo Press any key after completing the installer.
 ) else (
-    echo Python is already installed. Please make sure its of version 3.10 or higher, using an older version will NOT work!
+    echo Python is installed. Use %PYTHON_VERSION% or newer.
 )
 
-:: ensure virtual environment exists
 if not exist "venv\Scripts\python.exe" (
-    echo Virtual environment not found. Creating one...
-    py -3.11 -m venv venv 2>nul || py -m venv venv || python -m venv venv
+    echo Creating virtual environment...
+    py -%PYTHON_VERSION% -m venv venv 2>nul || py -m venv venv || python -m venv venv
     if errorlevel 1 (
-        echo Failed to create virtual environment. Ensure Python is installed and accessible.
+        echo Failed to create venv.
         pause
         exit /b
     )
-    echo Virtual environment created successfully.
+    echo venv created.
 )
 
-:: install dependencies inside venv
-echo Installing dependencies...
+echo Installing dependencies in venv...
 call "venv\Scripts\activate.bat"
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 echo Finished installing dependencies.
+if exist "venv\Scripts\deactivate.bat" call "venv\Scripts\deactivate.bat"
 
 echo Setup finished.
-if exist "venv\Scripts\deactivate.bat" call "venv\Scripts\deactivate.bat"
 pause
 endlocal
