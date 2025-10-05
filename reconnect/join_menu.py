@@ -2,7 +2,7 @@ from reconnect import recon_utils
 import time 
 import screen
 import windows
-import pyautogui
+from compat_input import pyautogui
 
     
 buttons = {
