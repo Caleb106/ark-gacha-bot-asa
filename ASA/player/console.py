@@ -8,7 +8,7 @@ import variables
 import time 
 import settings
 import ASA.config 
-import pyautogui
+from compat_input import pyautogui
 import win32clipboard
 
 
@@ -81,4 +81,5 @@ def console_write(text:str):
         utils.press_key("Enter")
         
         time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
+
         
