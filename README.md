@@ -1,4 +1,4 @@
-##Gravity Gacha Bot (Render Bot Version)
+Gravity Gacha Bot (Render Bot Version)
 
   
   #Step One
