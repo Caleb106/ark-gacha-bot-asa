@@ -29,7 +29,7 @@ Gravity Gacha Bot (Render Bot Version)
 
       {
         "name": "Render #1",
-        "teleporter": "Lava Rathole!"   ##must exactly match your in-game teleporter name!
+        "teleporter": "Lava Rathole!"   #must exactly match your in-game teleporter name!
       },
 
 
