@@ -4,7 +4,7 @@ import typing
 
 import logs.gachalogs as logs
 import settings
-import discordbot
+from logs import discordbot
 import task_manager
 
 async def run_blocking(func: typing.Callable, *args, **kwargs):
