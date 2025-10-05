@@ -3,7 +3,7 @@ import time
 import screen
 import windows 
 import utils
-import pyautogui
+from compat_input import pyautogui
 import template
 
 
