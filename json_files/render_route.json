@@ -1,91 +1,127 @@
 [
     {
-        "name": "",
-        "teleporter": ""
+        "name": "Lava Rathole!",
+        "teleporter": "Lava Rathole!"
     },
     {
-        "name": "2",
-        "teleporter": ""
+        "name": "East Lava Pillar!",
+        "teleporter": "East Lava Pillar!"
     },
     {
-        "name": "3",
-        "teleporter": " #03"
+        "name": "Massive!",
+        "teleporter": "Massive!"
     },
     {
-        "name": "4",
-        "teleporter": " #04"
+        "name": "Drops!",
+        "teleporter": "Drops!"
     },
     {
-        "name": "5",
-        "teleporter": " #05"
+        "name": "Underworld Cube!",
+        "teleporter": "Underworld Cube!"
     },
     {
-        "name": "6",
-        "teleporter": " #06"
+        "name": "North East Water Rathole 1!",
+        "teleporter": "North East Water Rathole 1!"
     },
     {
-        "name": "7",
-        "teleporter": " #07"
+        "name": "North East Water Rathole 2!",
+        "teleporter": "North East Water Rathole 2!"
     },
     {
-        "name": "8",
-        "teleporter": " #08"
+        "name": "Obsidian!",
+        "teleporter": "Obsidian!"
     },
     {
-        "name": "9",
-        "teleporter": " #09"
+        "name": "Metal 1!",
+        "teleporter": "Metal 1!"
     },
     {
-        "name": "10",
-        "teleporter": " #10"
+        "name": "Metal 3!",
+        "teleporter": "Metal 3!"
     },
     {
-        "name": "11",
-        "teleporter": " #11"
+        "name": "Metal 4!",
+        "teleporter": "Metal 4!"
     },
     {
-        "name": "12",
-        "teleporter": " #12"
+        "name": "Brute!",
+        "teleporter": "Brute!"
     },
     {
-        "name": "13",
-        "teleporter": " #13"
+        "name": "Skull Pillar Rathole!",
+        "teleporter": "Skull Pillar Rathole!"
     },
     {
-        "name": "14",
-        "teleporter": " #14"
+        "name": "U Cave West Basi Wall!",
+        "teleporter": "U Cave West Basi Wall!"
     },
     {
-        "name": "15",
-        "teleporter": " #15"
+        "name": "(5) U Cave Gen 10 (East)!",
+        "teleporter": "(5) U Cave Gen 10 (East)!"
     },
     {
-        "name": "16",
-        "teleporter": " #16"
+        "name": "Rewoods East Rathole!",
+        "teleporter": "Rewoods East Rathole!"
     },
     {
-        "name": "17",
-        "teleporter": " #17"
+        "name": "Rewoods Central!",
+        "teleporter": "Rewoods Central!"
     },
     {
-        "name": "18",
-        "teleporter": " #18"
+        "name": "Rewoods Cliffplat!",
+        "teleporter": "Rewoods Cliffplat!"
     },
     {
-        "name": "19",
-        "teleporter": " #19"
+        "name": "Rewoods West Rathole!",
+        "teleporter": "Rewoods West Rathole!"
     },
     {
-        "name": "20",
-        "teleporter": " #20"
+        "name": "Redwoods Cliff Edge West!",
+        "teleporter": "Redwoods Cliff Edge West!"
     },
     {
-        "name": "21",
-        "teleporter": " #21"
+        "name": "(3) Berry TP!",
+        "teleporter": "(3) Berry TP!"
     },
     {
-        "name": "22",
-        "teleporter": " #22"
+        "name": "Swamp (NE)!",
+        "teleporter": "Swamp (NE)!"
+    },
+    {
+        "name": "Floating Island Rathole!",
+        "teleporter": "Floating Island Rathole!"
+    },
+    {
+        "name": "Ovis Rathole Beds!",
+        "teleporter": "Ovis Rathole Beds!"
+    },
+    {
+        "name": "AP Rathole Water!",
+        "teleporter": "AP Rathole Water!"
+    },
+    {
+        "name": "AP Rathole Inside!",
+        "teleporter": "AP Rathole Inside!"
+    },
+    {
+        "name": "Water Rathole!",
+        "teleporter": "Water Rathole!"
+    },
+    {
+        "name": "SN Pillar 6!",
+        "teleporter": "SN Pillar 6!"
+    },
+    {
+        "name": "SN Pillar 2 Render!",
+        "teleporter": "SN Pillar 2 Render!"
+    },
+    {
+        "name": "SN Spawn Cube!",
+        "teleporter": "SN Spawn Cube!"
+    },
+    {
+        "name": "Pearl Entrance!",
+        "teleporter": "Pearl Entrance!"
     }
 
 
