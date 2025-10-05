@@ -2,42 +2,80 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 
-:: Target Python
+:: ---- config ----
 set "PYTHON_VERSION=3.13"
-set "PYTHON_INSTALLER=3.13.0"
+set "VENV_DIR=venv"
+set "VENV_PY=%VENV_DIR%\Scripts\python.exe"
+set "REQ_FILE=requirements.txt"
+set "REQ_STAMP=%VENV_DIR%\requirements.sha256"
 
-cd
-
->nul 2>nul assoc .py
+:: ---- ensure Python ----
+echo Checking for Python %PYTHON_VERSION%...
+py -%PYTHON_VERSION% --version >NUL 2>&1
 if errorlevel 1 (
-    echo Python not installed, downloading installer...
-    powershell -c "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/%PYTHON_INSTALLER%/python-%PYTHON_INSTALLER%-amd64.exe' -OutFile '%TEMP%\python-%PYTHON_INSTALLER%.exe'"
-    echo Launching installer. Be sure to add Python to PATH.
-    "%TEMP%\python-%PYTHON_INSTALLER%.exe"
+  echo Python %PYTHON_VERSION% not found. Using default "py" or "python".
+  where py >NUL 2>&1 || where python >NUL 2>&1 || (
+    echo No Python found on PATH. Install Python and re-run setup.
     pause
-    echo Press any key after completing the installer.
+    exit /b 1
+  )
 ) else (
-    echo Python is installed. Use %PYTHON_VERSION% or newer.
+  echo Python %PYTHON_VERSION% detected.
 )
 
-if not exist "venv\Scripts\python.exe" (
-    echo Creating virtual environment...
-    py -%PYTHON_VERSION% -m venv venv 2>nul || py -m venv venv || python -m venv venv
-    if errorlevel 1 (
-        echo Failed to create venv.
-        pause
-        exit /b
-    )
-    echo venv created.
+:: ---- compute requirements hash ----
+if not exist "%REQ_FILE%" (
+  echo %REQ_FILE% not found.
+  pause
+  exit /b 1
 )
 
-echo Installing dependencies in venv...
-call "venv\Scripts\activate.bat"
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-echo Finished installing dependencies.
-if exist "venv\Scripts\deactivate.bat" call "venv\Scripts\deactivate.bat"
+for /f "skip=1 tokens=* delims=" %%H in ('certutil -hashfile "%REQ_FILE%" SHA256 ^| findstr /v /i "hash of file CertUtil"') do (
+  if not defined REQ_HASH set "REQ_HASH=%%H"
+)
+if not defined REQ_HASH (
+  echo Failed to compute hash for %REQ_FILE%.
+  pause
+  exit /b 1
+)
+set "REQ_HASH=%REQ_HASH: =%"
 
-echo Setup finished.
-pause
-endlocal
+:: ---- check if everything is already installed ----
+if exist "%VENV_PY%" if exist "%REQ_STAMP%" (
+  set /p CUR_HASH=<"%REQ_STAMP%"
+  if /i "%CUR_HASH%"=="%REQ_HASH%" (
+    echo Environment OK. Nothing to do.
+    echo Press any key to exit.
+    pause >NUL
+    exit /b 0
+  )
+)
+
+:: ---- (re)build environment ----
+if exist "%VENV_DIR%" (
+  echo Removing old virtual environment...
+  rmdir /s /q "%VENV_DIR%"
+)
+
+echo Creating virtual environment...
+py -%PYTHON_VERSION% -m venv "%VENV_DIR%" 2>NUL || py -m venv "%VENV_DIR%" 2>NUL || python -m venv "%VENV_DIR%"
+if not exist "%VENV_PY%" (
+  echo Failed to create venv.
+  pause
+  exit /b 1
+)
+
+echo Installing dependencies...
+"%VENV_PY%" -m pip install --upgrade pip
+"%VENV_PY%" -m pip install -r "%REQ_FILE%"
+if errorlevel 1 (
+  echo Dependency installation failed.
+  pause
+  exit /b 1
+)
+
+> "%REQ_STAMP%" echo %REQ_HASH%
+
+echo Setup complete. Press any key to exit.
+pause >NUL
+exit /b 0
