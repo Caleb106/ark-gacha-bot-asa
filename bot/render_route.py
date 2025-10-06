@@ -43,7 +43,8 @@ def _end_at_bed_and_rest():
     """
     Return to render bed and rest inside tekpod with tribelog visible.
     """
-    bed_name = getattr(settings, "bed_spawn", "GACHARENDER")
+        bed_name = getattr(settings, "render_bed_spawn",
+                       getattr(settings, "bed_spawn", "GACHARENDER"))
     try:
         logs.logger.info(f"RenderRoute: returning to bed '{bed_name}'")
         teleporter.open()
