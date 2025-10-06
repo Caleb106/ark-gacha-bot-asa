@@ -1,9 +1,11 @@
+# bot/render_route.py
+
 import time
 import settings
 import logs.gachalogs as logs
 
 from ASA.player import player_state, tribelog
-from ASA.strucutres import teleporter
+from ASA.strucutres import teleporter  # keep project spelling
 import bot.render as tekpod
 import utils
 
@@ -11,7 +13,7 @@ REST_SECONDS = getattr(settings, "render_rest_seconds", 2700)  # 45 min default
 
 
 def _normalize_view():
-    """Normalize pitch and yaw so the bot always 'faces forward'."""
+    """Normalize pitch and yaw so the bot always faces forward."""
     try:
         utils.zero()
         utils.set_yaw(settings.station_yaw)
@@ -43,7 +45,7 @@ def _end_at_bed_and_rest():
     """
     Return to render bed and rest inside tekpod with tribelog visible.
     """
-        bed_name = getattr(settings, "render_bed_spawn",
+    bed_name = getattr(settings, "render_bed_spawn",
                        getattr(settings, "bed_spawn", "GACHARENDER"))
     try:
         logs.logger.info(f"RenderRoute: returning to bed '{bed_name}'")
