@@ -1,12 +1,253 @@
 [
     {
+        "name": "Lava Rathole!",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "East Lava Pillar!",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "Massive!",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "Drops!",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "Underworld Cube!",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
         "name": "TELEPORTER NAME IN HERE",
         "xpos": -1,
         "ypos": -1,
         "zpos": -1,
-        "yaw": 0,
+        "yaw": -0.64,
         "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "TELEPORTER NAME IN HERE",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0
+    },
+    {
+        "name": "GRAVITYRENDER",
+        "xpos": -1,
+        "ypos": -1,
+        "zpos": -1,
+        "yaw": -0.64,
+        "pitch": 0,
+        "pushout": 29.36
     }
-    
-    
+
+
 ]
