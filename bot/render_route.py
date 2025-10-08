@@ -1,107 +1,111 @@
 import time
 import settings
-import template
-import variables
 import utils
-import windows
+import template
 import logs.gachalogs as logs
 
-import ASA.player.player_state as player_state
-import ASA.player.player_inventory as player_inventory
-import ASA.player.buffs as buffs
-import local_player
+from ASA.player import tribelog
+from ASA.stations import custom_stations
+from ASA.strucutres import teleporter
+import bot.render as tekpod
 
-from compat_input import pyautogui
+DWELL = int(getattr(settings, "render_dwell_seconds", 25))
+REST  = int(getattr(settings, "render_rest_seconds", 2700))
 
-render_flag = False
+class _Override:
+    def __init__(self, **vals):
+        self.vals, self.prev = vals, {}
+    def __enter__(self):
+        for k, v in self.vals.items():
+            self.prev[k] = getattr(settings, k, None)
+            setattr(settings, k, v)
+    def __exit__(self, *exc):
+        for k, v in self.prev.items():
+            setattr(settings, k, v)
 
-def is_open() -> bool:
-    return template.check_template_no_bounds("bed_radical", 0.6)
-
-def _hold_use_for_radial(max_wait: float = 1.0) -> bool:
-    use_vk = utils.keymap_return(local_player.get_input_settings("Use"))
-    pyautogui.keyDown(chr(use_vk))
-    ok = template.template_await_true(template.check_template_no_bounds, max_wait, "bed_radical", 0.6)
-    pyautogui.keyUp(chr(use_vk))
-    return ok
-
-def enter_tekpod():
-    from bot import config
-    global render_flag
-    tries = 0
-    max_tries = int(getattr(config, "render_attempts", 3))
-
-    while not render_flag and tries < max_tries:
-        tries += 1
-        utils.press_key(local_player.get_input_settings("Run"))
-        time.sleep(0.15 * settings.lag_offset)
-        utils.zero()
-        utils.set_yaw(settings.station_yaw)
-        utils.turn_down(15)
-        time.sleep(0.30 * settings.lag_offset)
-
-        if not _hold_use_for_radial(1.0):
-            time.sleep(0.50 * settings.lag_offset)
-            utils.press_key(local_player.get_input_settings("Run"))
-            utils.zero(); utils.set_yaw(settings.station_yaw); utils.turn_down(15)
-            time.sleep(0.30 * settings.lag_offset)
-            _hold_use_for_radial(0.8)
-
-        if template.template_await_true(template.check_template_no_bounds, 1.0, "bed_radical", 0.6):
-            time.sleep(0.20 * settings.lag_offset)
-            windows.move_mouse(
-                variables.get_pixel_loc("radical_laydown_x"),
-                variables.get_pixel_loc("radical_laydown_y"),
-            )
-            time.sleep(0.50 * settings.lag_offset)
-            try: pyautogui.keyUp(chr(utils.keymap_return(local_player.get_input_settings("Use"))))
-            except Exception: pass
-            time.sleep(1.00)
-
-        if buffs.check_buffs() == 1:
-            logs.logger.critical(f"in tekpod after {tries} attempt(s)")
-            render_flag = True
-            utils.current_pitch = 0
-            return
-        else:
-            player_state.check_state()
-            logs.logger.error(f"enter_tekpod attempt {tries} failed; retrying")
-
-    if not render_flag and tries >= max_tries:
-        logs.logger.warning("bed entry failed; using implant to respawn then retry later")
-        player_inventory.implant_eat()
-        player_state.check_state()
-
-def leave_tekpod():
-    """
-    Legacy order: reset → Use to stand → verify → zero → set_yaw → pause → CCC → pause → look down → small settle.
-    Pushout is bed-only and handled by navigation later.
-    """
-    global render_flag
-    player_state.reset_state()
-    time.sleep(0.20 * settings.lag_offset)
-
-    utils.press_key(local_player.get_input_settings("Use"))
-    time.sleep(1.00 * settings.lag_offset)
-
-    if buffs.check_buffs() == 1:
-        time.sleep(0.60)
-        logs.logger.warning("did not leave tekpod on first try; retrying")
-        utils.press_key(local_player.get_input_settings("Use"))
-        time.sleep(1.00 * settings.lag_offset)
-
+def _normalize(yaw: float | None):
     utils.zero()
-    utils.set_yaw(settings.station_yaw)
-    time.sleep(0.25 * settings.lag_offset)
+    if yaw is not None:
+        utils.set_yaw(yaw)
+    time.sleep(0.10 * settings.lag_offset)
 
-    # CCC to stabilize like the original bot
-    try:
-        player_state.check_state()  # this performs CCC internally
-    except Exception:
-        pass
-    time.sleep(0.25 * settings.lag_offset)
-
+def _open_tp_ui_with_wait():
+    # the menu opens reliably only when looking down
     utils.turn_down(80)
     time.sleep(0.30 * settings.lag_offset)
+    teleporter.open()
+    # wait for icons to appear before selecting
+    if not template.template_await_true(template.teleport_icon, 10, 0.55):
+        raise RuntimeError("teleport icons did not appear")
 
-    render_flag = False
+def _tp_to(meta) -> bool:
+    """
+    Robust TP:
+    - look down
+    - open TP and wait for icons
+    - select by meta.name
+    - small settle, look up, normalize to meta yaw
+    Retries once.
+    """
+    for attempt in (1, 2):
+        try:
+            _open_tp_ui_with_wait()
+            teleporter.teleport_not_default(meta)  # selects by name; no fallback desired
+            teleporter.close()
+            time.sleep(0.80 * settings.lag_offset)
+            utils.turn_up(80)
+            time.sleep(0.20 * settings.lag_offset)
+            _normalize(meta.yaw)
+            return True
+        except Exception as e:
+            logs.logger.warning(f"teleport to '{getattr(meta,'name',meta)}' failed (try {attempt}): {e}")
+            try: teleporter.close()
+            except Exception: pass
+            time.sleep(0.60 * settings.lag_offset)
+    return False
+
+def run(route: list, loop: bool = False):
+    if not route:
+        logs.logger.warning("render route empty")
+        return
+
+    # leave bed exactly like legacy flow
+    tekpod.leave_tekpod()
+    time.sleep(0.30 * settings.lag_offset)
+
+    while True:
+        for idx, stop in enumerate(route, 1):
+            tp_name = stop.get("teleporter") if isinstance(stop, dict) else str(stop)
+            label   = stop.get("name", tp_name) if isinstance(stop, dict) else tp_name
+
+            meta = custom_stations.get_station_metadata(tp_name)
+            logs.logger.info(f"RenderRoute: {idx}/{len(route)} -> {label}")
+
+            if not _tp_to(meta):
+                continue
+
+            try: tribelog.open()
+            except Exception: pass
+
+            time.sleep(DWELL * settings.lag_offset)
+
+            try: tribelog.close()
+            except Exception: pass
+
+        # return to render bed and rest with its yaw/pushout
+        bed_name = getattr(settings, "render_bed_spawn", getattr(settings, "bed_spawn", "GACHARENDER"))
+        bed_meta = custom_stations.get_station_metadata(bed_name)
+
+        if _tp_to(bed_meta):
+            with _Override(station_yaw=bed_meta.yaw,
+                           render_pushout=getattr(bed_meta, "pushout", getattr(settings, "render_pushout", 0))):
+                tekpod.enter_tekpod()
+                try: tribelog.open()
+                except Exception: pass
+                logs.logger.info(f"RenderRoute: rest {REST}s")
+                time.sleep(REST)
+                try: tribelog.close()
+                except Exception: pass
+
+        if not loop:
+            break
