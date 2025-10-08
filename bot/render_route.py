@@ -11,48 +11,28 @@ DWELL = int(getattr(settings, "render_dwell_seconds", 25))
 REST  = int(getattr(settings, "render_rest_seconds", 2700))
 
 def load() -> list:
-    """Load route from json_files/render_route.json (or cwd fallback)."""
     for p in ("json_files/render_route.json", "render_route.json"):
         if os.path.exists(p):
             try:
                 with open(p, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                if isinstance(data, list):
-                    return data
+                return data if isinstance(data, list) else []
             except Exception as e:
                 logs.logger.error(f"_load_route - render route load failed: {e}")
                 return []
     logs.logger.error("_load_route - render_route.json not found")
     return []
 
-def _normalize(yaw: float | None):
-    utils.zero()
-    if yaw is not None:
-        utils.set_yaw(yaw)
-    time.sleep(0.10 * settings.lag_offset)
-
-def _open_tp_ui_with_wait():
-    utils.turn_down(80)
-    time.sleep(0.30 * settings.lag_offset)
-    teleporter.open()
-    if not template.template_await_true(template.teleport_icon, 10, 0.55):
-        raise RuntimeError("teleport icons did not appear")
-
 def _tp_to(meta) -> bool:
+    """Open once inside teleporter.teleport_not_default and rely on its waits."""
     for attempt in (1, 2):
         try:
-            _open_tp_ui_with_wait()
-            teleporter.teleport_not_default(meta)  # select by exact name
-            teleporter.close()
+            teleporter.teleport_not_default(meta)
+            # post-TP settle
             time.sleep(0.80 * settings.lag_offset)
-            utils.turn_up(80)
-            time.sleep(0.20 * settings.lag_offset)
-            _normalize(getattr(meta, "yaw", None))
             return True
         except Exception as e:
             logs.logger.warning(f"teleport to '{getattr(meta,'name',meta)}' failed (try {attempt}): {e}")
-            try: teleporter.close()
-            except Exception: pass
             time.sleep(0.60 * settings.lag_offset)
     return False
 
