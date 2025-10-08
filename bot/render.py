@@ -43,7 +43,9 @@ def enter_tekpod():
         if not _hold_use_for_radial(1.0):
             time.sleep(0.50 * settings.lag_offset)
             utils.press_key(local_player.get_input_settings("Run"))
-            utils.zero(); utils.set_yaw(settings.station_yaw); utils.turn_down(15)
+            utils.zero()
+            utils.set_yaw(settings.station_yaw)
+            utils.turn_down(15)
             time.sleep(0.30 * settings.lag_offset)
             _hold_use_for_radial(0.8)
 
@@ -54,8 +56,10 @@ def enter_tekpod():
                 variables.get_pixel_loc("radical_laydown_y"),
             )
             time.sleep(0.50 * settings.lag_offset)
-            try: pyautogui.keyUp(chr(utils.keymap_return(local_player.get_input_settings("Use"))))
-            except Exception: pass
+            try:
+                pyautogui.keyUp(chr(utils.keymap_return(local_player.get_input_settings("Use"))))
+            except Exception:
+                pass
             time.sleep(1.00)
 
         if buffs.check_buffs() == 1:
@@ -64,16 +68,20 @@ def enter_tekpod():
             utils.current_pitch = 0
             return
         else:
-            player_state.check_state()
+            # only a light reset; do NOT call check_state() here
+            player_state.reset_state()
             logs.logger.error(f"enter_tekpod attempt {tries} failed; retrying")
 
     if not render_flag and tries >= max_tries:
         logs.logger.warning("bed entry failed; using implant to respawn then retry later")
         player_inventory.implant_eat()
-        player_state.check_state()
+        player_state.reset_state()
 
 def leave_tekpod():
-    """Match legacy order exactly: pushout yaw → normalize yaw → small pauses → CCC → look down."""
+    """
+    Legacy choreography: pushout -> normalize to station_yaw -> short pause -> look down.
+    No check_state() call here to avoid bouncing back to bed.
+    """
     global render_flag
     player_state.reset_state()
     time.sleep(0.20 * settings.lag_offset)
@@ -88,24 +96,16 @@ def leave_tekpod():
         utils.press_key(local_player.get_input_settings("Use"))
         time.sleep(1.00 * settings.lag_offset)
 
-    # legacy: set current_yaw to pushout, then normalize to station_yaw
+    # set pushout then normalize yaw
     try:
-        utils.current_yaw = getattr(settings, "render_pushout", utils.current_yaw)
+        utils.current_yaw = settings.render_pushout
     except Exception:
         pass
-
     utils.zero()
     utils.set_yaw(settings.station_yaw)
-    time.sleep(0.50 * settings.lag_offset)  # legacy used 0.5
+    time.sleep(0.50 * settings.lag_offset)
 
-    # CCC normalization like original
-    try:
-        player_state.check_state()
-    except Exception:
-        pass
-    time.sleep(0.25 * settings.lag_offset)
-
-    # look straight down before opening TP
+    # do NOT call player_state.check_state() here — it can TP back to bed
     utils.turn_down(80)
     time.sleep(0.30 * settings.lag_offset)
 
