@@ -73,14 +73,12 @@ def enter_tekpod():
         player_state.check_state()
 
 def leave_tekpod():
-    """
-    Legacy order: reset → Use to stand → verify → zero → set_yaw → pause → CCC → pause → look down → small settle.
-    Pushout is bed-only and handled by navigation later.
-    """
+    """Match legacy order exactly: pushout yaw → normalize yaw → small pauses → CCC → look down."""
     global render_flag
     player_state.reset_state()
     time.sleep(0.20 * settings.lag_offset)
 
+    # stand up
     utils.press_key(local_player.get_input_settings("Use"))
     time.sleep(1.00 * settings.lag_offset)
 
@@ -90,17 +88,24 @@ def leave_tekpod():
         utils.press_key(local_player.get_input_settings("Use"))
         time.sleep(1.00 * settings.lag_offset)
 
+    # legacy: set current_yaw to pushout, then normalize to station_yaw
+    try:
+        utils.current_yaw = getattr(settings, "render_pushout", utils.current_yaw)
+    except Exception:
+        pass
+
     utils.zero()
     utils.set_yaw(settings.station_yaw)
-    time.sleep(0.25 * settings.lag_offset)
+    time.sleep(0.50 * settings.lag_offset)  # legacy used 0.5
 
-    # CCC to stabilize like the original bot
+    # CCC normalization like original
     try:
-        player_state.check_state()  # this performs CCC internally
+        player_state.check_state()
     except Exception:
         pass
     time.sleep(0.25 * settings.lag_offset)
 
+    # look straight down before opening TP
     utils.turn_down(80)
     time.sleep(0.30 * settings.lag_offset)
 
