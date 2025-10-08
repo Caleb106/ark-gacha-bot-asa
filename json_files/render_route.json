@@ -85,42 +85,38 @@
     },
     {
         "name": "Render #22",
-        "teleporter": "Swamp (NE)!"
-    },
-    {
-        "name": "Render #23",
         "teleporter": "Floating Island Rathole!"
     },
     {
-        "name": "Render #24",
+        "name": "Render #23",
         "teleporter": "Ovis Rathole Beds!"
     },
     {
-        "name": "Render #25",
+        "name": "Render #24",
         "teleporter": "AP Rathole Water!"
     },
     {
-        "name": "Render #26",
+        "name": "Render #25",
         "teleporter": "AP Rathole Inside!"
     },
     {
-        "name": "Render #27",
+        "name": "Render #26",
         "teleporter": "Water Rathole!"
     },
     {
-        "name": "Render #28",
+        "name": "Render #27",
         "teleporter": "SN Pillar 6!"
     },
     {
-        "name": "Render #29",
+        "name": "Render #28",
         "teleporter": "SN Pillar 2 Render!"
     },
     {
-        "name": "Render #30",
+        "name": "Render #29",
         "teleporter": "SN Spawn Cube!"
     },
     {
-        "name": "Render #31",
+        "name": "Render #30",
         "teleporter": "Pearl Entrance!"
     }
 
