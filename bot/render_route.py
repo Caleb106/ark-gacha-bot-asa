@@ -1,7 +1,5 @@
-import time
-import settings
-import utils
-import template
+import os, json, time
+import settings, utils, template
 import logs.gachalogs as logs
 
 from ASA.player import tribelog
@@ -12,16 +10,20 @@ import bot.render as tekpod
 DWELL = int(getattr(settings, "render_dwell_seconds", 25))
 REST  = int(getattr(settings, "render_rest_seconds", 2700))
 
-class _Override:
-    def __init__(self, **vals):
-        self.vals, self.prev = vals, {}
-    def __enter__(self):
-        for k, v in self.vals.items():
-            self.prev[k] = getattr(settings, k, None)
-            setattr(settings, k, v)
-    def __exit__(self, *exc):
-        for k, v in self.prev.items():
-            setattr(settings, k, v)
+def load() -> list:
+    """Load route from json_files/render_route.json (or cwd fallback)."""
+    for p in ("json_files/render_route.json", "render_route.json"):
+        if os.path.exists(p):
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    return data
+            except Exception as e:
+                logs.logger.error(f"_load_route - render route load failed: {e}")
+                return []
+    logs.logger.error("_load_route - render_route.json not found")
+    return []
 
 def _normalize(yaw: float | None):
     utils.zero()
@@ -30,32 +32,22 @@ def _normalize(yaw: float | None):
     time.sleep(0.10 * settings.lag_offset)
 
 def _open_tp_ui_with_wait():
-    # the menu opens reliably only when looking down
     utils.turn_down(80)
     time.sleep(0.30 * settings.lag_offset)
     teleporter.open()
-    # wait for icons to appear before selecting
     if not template.template_await_true(template.teleport_icon, 10, 0.55):
         raise RuntimeError("teleport icons did not appear")
 
 def _tp_to(meta) -> bool:
-    """
-    Robust TP:
-    - look down
-    - open TP and wait for icons
-    - select by meta.name
-    - small settle, look up, normalize to meta yaw
-    Retries once.
-    """
     for attempt in (1, 2):
         try:
             _open_tp_ui_with_wait()
-            teleporter.teleport_not_default(meta)  # selects by name; no fallback desired
+            teleporter.teleport_not_default(meta)  # select by exact name
             teleporter.close()
             time.sleep(0.80 * settings.lag_offset)
             utils.turn_up(80)
             time.sleep(0.20 * settings.lag_offset)
-            _normalize(meta.yaw)
+            _normalize(getattr(meta, "yaw", None))
             return True
         except Exception as e:
             logs.logger.warning(f"teleport to '{getattr(meta,'name',meta)}' failed (try {attempt}): {e}")
@@ -69,7 +61,7 @@ def run(route: list, loop: bool = False):
         logs.logger.warning("render route empty")
         return
 
-    # leave bed exactly like legacy flow
+    # leave render bed using legacy sequence
     tekpod.leave_tekpod()
     time.sleep(0.30 * settings.lag_offset)
 
@@ -92,20 +84,18 @@ def run(route: list, loop: bool = False):
             try: tribelog.close()
             except Exception: pass
 
-        # return to render bed and rest with its yaw/pushout
+        # return to render bed and rest
         bed_name = getattr(settings, "render_bed_spawn", getattr(settings, "bed_spawn", "GACHARENDER"))
         bed_meta = custom_stations.get_station_metadata(bed_name)
 
         if _tp_to(bed_meta):
-            with _Override(station_yaw=bed_meta.yaw,
-                           render_pushout=getattr(bed_meta, "pushout", getattr(settings, "render_pushout", 0))):
-                tekpod.enter_tekpod()
-                try: tribelog.open()
-                except Exception: pass
-                logs.logger.info(f"RenderRoute: rest {REST}s")
-                time.sleep(REST)
-                try: tribelog.close()
-                except Exception: pass
+            tekpod.enter_tekpod()
+            try: tribelog.open()
+            except Exception: pass
+            logs.logger.info(f"RenderRoute: rest {REST}s")
+            time.sleep(REST)
+            try: tribelog.close()
+            except Exception: pass
 
         if not loop:
             break
