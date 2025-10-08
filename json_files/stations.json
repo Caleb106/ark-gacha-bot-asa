@@ -1,253 +1,34 @@
 [
-    {
-        "name": "Lava Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "East Lava Pillar!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Massive!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Drops!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Underworld Cube!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "North East Water Rathole 1!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "North East Water Rathole 2!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Obsidian!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Metal 1!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Metal 3!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Metal 4!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Brute!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Skull Pillar Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "U Cave West Basi Wall!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "(5) U Cave Gen 10 (East)!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Redwoods East Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Redwoods Central!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Redwoods Cliffplat!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Redwoods West Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Redwoods Cliff Edge West!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "(3) Berry TP!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Floating Island Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Ovis Rathole Beds!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "AP Rathole Water!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "AP Rathole Inside!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Water Rathole!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "SN Pillar 6!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "SN Pillar 2 Render!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "SN Spawn Cube!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "Pearl Entrance!",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0
-    },
-    {
-        "name": "GRAVITYRENDER",
-        "xpos": -1,
-        "ypos": -1,
-        "zpos": -1,
-        "yaw": -0.64,
-        "pitch": 0,
-        "pushout": 29.36
-    }
+    {"name":"Lava Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"East Lava Pillar!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Massive!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Drops!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Underworld Cube!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"North East Water Rathole 1!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"North East Water Rathole 2!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Obsidian!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Metal 1!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Metal 3!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Metal 4!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Brute!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Skull Pillar Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"U Cave West Basi Wall!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"(5) U Cave Gen 10 (East)!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Redwoods East Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Redwoods Central!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Redwoods Cliffplat!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Redwoods West Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Redwoods Cliff Edge West!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"(3) Berry TP!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Floating Island Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Ovis Rathole Beds!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"AP Rathole Water!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"AP Rathole Inside!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Water Rathole!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"SN Pillar 6!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"SN Pillar 2 Render!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"SN Spawn Cube!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
+    {"name":"Pearl Entrance!","xpos":-1,"ypos":-1,"zpos":-1,"yaw":-0.64,"pitch":0},
 
-
+    { "name":"GRAVITYRENDER", "xpos":-1,"ypos":-1,"zpos":-1, "yaw":-0.64,"pitch":0, "pushout":29.36 }
 ]
