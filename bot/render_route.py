@@ -1,39 +1,47 @@
 import time
 import settings
+import utils
 import logs.gachalogs as logs
 
 from ASA.player import tribelog
-from ASA.strucutres import teleporter
 from ASA.stations import custom_stations
+from ASA.strucutres import teleporter
 import bot.render as tekpod
-import utils
 
-REST_SECONDS = getattr(settings, "render_rest_seconds", 2700)
+DWELL = int(getattr(settings, "render_dwell_seconds", 25))
+REST  = int(getattr(settings, "render_rest_seconds", 2700))
 
-class _TempSettings:
-    def __init__(self, **kw): self.kw, self.prev = kw, {}
+class _Override:
+    """Temporarily override settings fields."""
+    def __init__(self, **vals):
+        self.vals = vals
+        self.prev = {}
     def __enter__(self):
-        for k, v in self.kw.items():
+        for k, v in self.vals.items():
             self.prev[k] = getattr(settings, k, None)
             setattr(settings, k, v)
-    def __exit__(self, *a):
+    def __exit__(self, *exc):
         for k, v in self.prev.items():
             setattr(settings, k, v)
 
-def _normalize_to_yaw(yaw):
-    try:
-        utils.zero()
-        if yaw is not None:
-            utils.set_yaw(yaw)
-        time.sleep(0.1 * settings.lag_offset)
-    except Exception as e:
-        logs.logger.debug(f"normalize skipped: {e}")
+def _normalize(yaw: float | None):
+    # zero then snap to desired yaw; tiny settle to mimic legacy pacing
+    utils.zero()
+    if yaw is not None:
+        utils.set_yaw(yaw)
+    time.sleep(0.10 * settings.lag_offset)
 
-def _teleport(meta) -> bool:
+def _tp_to(meta) -> bool:
+    """Open teleporter UI, pick destination by name, wait, post-TP view fix."""
     try:
         teleporter.open()
-        teleporter.teleport_not_default(meta)  # sets yaw to meta.yaw internally
+        teleporter.teleport_not_default(meta)  # legacy selector logic
         teleporter.close()
+        # settle, then look up and normalize to meta yaw like the original flow
+        time.sleep(0.80 * settings.lag_offset)
+        utils.turn_up(80)
+        time.sleep(0.20 * settings.lag_offset)
+        _normalize(meta.yaw)
         return True
     except Exception as e:
         logs.logger.warning(f"teleport to '{getattr(meta,'name',meta)}' failed: {e}")
@@ -41,65 +49,55 @@ def _teleport(meta) -> bool:
         except Exception: pass
         return False
 
-def _end_at_bed_and_rest():
-    bed_name = getattr(settings, "render_bed_spawn",
-                       getattr(settings, "bed_spawn", "GACHARENDER"))
-    bed_meta = custom_stations.get_station_metadata(bed_name)
-
-    logs.logger.info(f"RenderRoute: returning to bed '{bed_meta.name}'")
-    _teleport(bed_meta)
-    time.sleep(1.0 * settings.lag_offset)
-    _normalize_to_yaw(bed_meta.yaw)
-
-    overrides = {"station_yaw": bed_meta.yaw}
-    if bed_meta.pushout is not None:
-        overrides["render_pushout"] = bed_meta.pushout
-
-    with _TempSettings(**overrides):
-        try: tekpod.enter_tekpod()
-        except Exception as e: logs.logger.error(f"enter_tekpod failed: {e}")
-
-        try: tribelog.open()
-        except Exception: pass
-
-        sleep_s = max(0, int(getattr(settings, "render_rest_seconds", REST_SECONDS)))
-        logs.logger.info(f"RenderRoute: rest {sleep_s}s")
-        time.sleep(sleep_s)
-
-        try: tribelog.close()
-        except Exception: pass
-
-def run(route, dwell_s: int = 25, loop: bool = False, end_at_bed: bool = True, settle_s: float = 1.0):
-    if not isinstance(route, (list, tuple)) or not route:
-        logs.logger.warning("RenderRoute: empty route provided")
+def run(route: list, loop: bool = False):
+    """
+    Sequence:
+    - leave bed with legacy pacing
+    - for each stop: open tribelog, dwell, close tribelog
+    - return to render bed, enter it, open tribelog, rest, close tribelog
+    """
+    if not route:
+        logs.logger.warning("render route empty")
         return
 
-    dwell_s = max(0, int(dwell_s))
+    # ensure we start cleanly
+    tekpod.leave_tekpod()
+    time.sleep(0.30 * settings.lag_offset)
 
     while True:
-        for idx, dest in enumerate(route, start=1):
-            if not dest: continue
-            if isinstance(dest, dict):
-                tp_name = dest.get("teleporter") or dest.get("name") or str(dest)
-                label = dest.get("name", tp_name)
-            else:
-                tp_name, label = str(dest), str(dest)
+        for idx, stop in enumerate(route, 1):
+            tp_name = stop.get("teleporter") if isinstance(stop, dict) else str(stop)
+            label   = stop.get("name", tp_name) if isinstance(stop, dict) else tp_name
 
             meta = custom_stations.get_station_metadata(tp_name)
             logs.logger.info(f"RenderRoute: {idx}/{len(route)} -> {label}")
 
-            if not _teleport(meta): continue
+            if not _tp_to(meta):
+                continue
 
-            time.sleep(settle_s * settings.lag_offset)
-            _normalize_to_yaw(meta.yaw)
-
-            try: from ASA.player import tribelog; tribelog.open()
+            # open tribelog for the dwell; close after
+            try: tribelog.open()
             except Exception: pass
 
-            time.sleep(dwell_s * settings.lag_offset)
+            time.sleep(DWELL * settings.lag_offset)
 
             try: tribelog.close()
             except Exception: pass
 
-        if end_at_bed: _end_at_bed_and_rest()
-        if not loop: break
+        # back to render bed and rest
+        bed_name = getattr(settings, "render_bed_spawn", getattr(settings, "bed_spawn", "GACHARENDER"))
+        bed_meta = custom_stations.get_station_metadata(bed_name)
+
+        if _tp_to(bed_meta):
+            # use bed-specific yaw and pushout while entering the pod
+            with _Override(station_yaw=bed_meta.yaw, render_pushout=getattr(bed_meta, "pushout", getattr(settings, "render_pushout", 0))):
+                tekpod.enter_tekpod()
+                try: tribelog.open()
+                except Exception: pass
+                logs.logger.info(f"RenderRoute: rest {REST}s")
+                time.sleep(REST)
+                try: tribelog.close()
+                except Exception: pass
+
+        if not loop:
+            break
