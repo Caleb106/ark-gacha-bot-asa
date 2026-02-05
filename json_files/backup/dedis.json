@@ -1,0 +1,110 @@
+[
+    {
+        "dediID": "deposit",
+        "active": false,
+        "dediBoxes": [
+            {
+                "resource": "element",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "element",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "flint",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "flint",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "fungal",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": true
+            },
+            {
+                "resource": "fungal",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": true
+            }
+        ]
+    },
+    {
+        "dediID": "grindables",
+        "active": false,
+        "dediBoxes": [
+            {
+                "resource": "cementing",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "hide",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "metal",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "electronics",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "crystal",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            },
+            {
+                "resource": "wood",
+                "location": {
+                    "yaw": 0,
+                    "pitch": 0
+                },
+                "crouched": false
+            }
+        ]
+    }
+]
