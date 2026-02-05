@@ -66,3 +66,5 @@ def get_input_settings(input_name):
                 
     return input_name
             
+if get_input_settings("ConsoleKeys").lower() == "tilde":
+    input("ERROR :: CHANGE YOUR CONSOLE KEYBIND FROM TILDE -- ")

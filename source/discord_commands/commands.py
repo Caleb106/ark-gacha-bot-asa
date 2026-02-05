@@ -8,6 +8,8 @@ import settings
 from source.logs import discordbot,botoptions
 import task_manager
 import source.gacha_bot.stations as stations
+import source.ASA.player.player_inventory as inventory
+from source.utility.colour_checks import console_output, output_oranage_tp_pixel
 
 class discord_commands(commands.Cog):
     def __init__(self,bot):
@@ -20,11 +22,14 @@ class discord_commands(commands.Cog):
         last_position = 0
         
         while True:
-            with open("logs/logs.txt", 'r') as file:
+            with open("source/logs/logs.txt", 'r') as file:
                 file.seek(last_position)
                 new_logs = file.read()
                 if new_logs:
-                    await log_channel.send(f"New logs:\n```{new_logs}```")
+                    if len(new_logs) >= 1999:
+                        await log_channel.send(f"New logs:\n```log limit reached 2000 skipping```")
+                    else:
+                        await log_channel.send(f"New logs:\n```{new_logs}```")
                     last_position = file.tell()
             await asyncio.sleep(5)
 
@@ -50,25 +55,24 @@ class discord_commands(commands.Cog):
 
     @app_commands.command()
     async def start(self,interaction: discord.Interaction):
-        global running_tasks
         self.start_time = time.time()
         logchn = self.bot.get_channel(settings.log_channel_gacha) 
         if logchn:
             await logchn.send(f'bot starting up now')
         
         # resetting log files
-        with open("logs/logs.txt", 'w') as file:
+        with open("source/logs/logs.txt", 'w') as file:
             file.write(f"")
-        self.running_tasks.append(self.bot.loop.create_task(self.send_new_logs()))
+        self.bot.loop.create_task(self.send_new_logs())
         
         
         await interaction.response.send_message(f"starting up bot now you have 5 seconds before start")
         time.sleep(5)
-        self.running_tasks.append(asyncio.create_task(botoptions.task_manager_start()))
+        asyncio.create_task(botoptions.task_manager_start())
         while task_manager.started == False:
             await asyncio.sleep(1)
-        self.running_tasks.append(self.bot.loop.create_task(self.embed_send("active_queue")))
-        self.running_tasks.append(self.bot.loop.create_task(self.embed_send("waiting_queue")))
+        self.bot.loop.create_task(self.embed_send("active_queue"))
+        self.bot.loop.create_task(self.embed_send("waiting_queue"))
     
     async def get_time_diffrence(self,inital):
         time_difference = time.time() - inital
@@ -84,8 +88,14 @@ class discord_commands(commands.Cog):
 
     @app_commands.command(name="info",description="sends analytics for the bot")
     async def info(self,interaction: discord.Integration):
-        print(self.start_time)
-        await interaction.response.send_message(f"time since start: {await self.get_time_diffrence(self.start_time)}")
+        if self.start_time == 0:
+            await interaction.response.send_message("bot hasnt started up yet")
+        else:
+            await interaction.response.send_message(f"time since start: {await self.get_time_diffrence(self.start_time)} resets : {inventory.resets}")
+
+    @app_commands.command(name="colour_checks",description="outputs pixel values ")
+    async def colour_checks(self,interaction: discord.Interaction):
+        await interaction.response.send_message(f"console mean output { console_output.output_mean_colour()} orange pixel {  output_oranage_tp_pixel.get_orange_pixel()}")
 
 async def setup(bot):
     await bot.add_cog(discord_commands(bot))

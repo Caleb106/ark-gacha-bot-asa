@@ -7,7 +7,7 @@ from source.ASA.player import tribelog , buffs , player_inventory
 from source.ASA.strucutres import bed , teleporter
 import source.ASA.config 
 import source.gacha_bot.render
-import source.reconnect.start
+from source.join_sim.source import main
 
 global crouched
 global human
@@ -33,19 +33,20 @@ class charecter():
             for x in range(3): # just ensuring that we are standing up properly 
                 utils.press_key("Run")   
             time.sleep(0.1) # takes time to uncrouch ensuring that it has properly    
-        
+            self.crouched = False
+
 human = charecter()
 
 def check_disconnected():
-    rejoin = source.reconnect.start.reconnect(str(settings.server_number))
     
-    if rejoin.check_disconected():
+    if main.is_menu() or main.is_crashed():
         logs.logger.critical("we are disconnected from the server")
-        rejoin.rejoin_server()
+        windows.hwnd = main.main_loop(str(settings.server_number))
         tribelog.close()
         logs.logger.critical("joined back into the server waiting 30 seconds to render everything ")
-        time.sleep(60)
+        time.sleep(60)# letting everything load back in
         utils.set_yaw(settings.station_yaw)
+        
 
 def reset_state():
     logs.logger.debug(f"resetting char state now")
@@ -59,8 +60,8 @@ def reset_state():
 def check_state(): # mainliy checked at the start of every task to check for food / water on the char
     check_disconnected()
     reset_state()
-    buffs = buffs.check_buffs()
-    type = buffs.check_buffs()
+    buff = buffs.check_buffs()
+    type = buff.check_buffs()
     if type == 1 or source.gacha_bot.render.render_flag: #type 1 is when char is in the tekpod
         logs.logger.debug(f"tekpod buff found on screen leaving tekpod now reason | type : {type} render flag : {source.gacha_bot.render.render_flag}")
         source.gacha_bot.render.leave_tekpod()

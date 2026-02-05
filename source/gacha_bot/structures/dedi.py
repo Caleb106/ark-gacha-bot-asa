@@ -74,7 +74,7 @@ def get_info_on_dedi(dedi_id,position):
     full_file = load_dedi_data("json_files\dedis.json")
     for x in range(len(full_file)):
         if dedi_id == full_file[x]["dediID"]:
-            print(full_file[x]["dediBoxes"][position])
+            #print(full_file[x]["dediBoxes"][position])
             dedi_info = full_file[x]["dediBoxes"][position]
             yaw = dedi_info["location"]["yaw"]
             pitch = dedi_info["location"]["pitch"]
@@ -102,7 +102,7 @@ def get_resource_from_dedis(resource):
     #if overcapped we dont tp again 
     
 
-def dedi_deposit(dedi_type):
+def dedi_deposit(dedi_type:str,dedi_height:int):
     '''
     i guess with this you could put more dedis than the default numbers of 6 or 4 depending on if the bot can reach them 
     '''
@@ -111,14 +111,20 @@ def dedi_deposit(dedi_type):
     utils.set_yaw(settings.station_yaw)
     for x in range(len(full_file)):
         if dedi_type == full_file[x]["dediID"]:
-            for y in range(len(full_file[x]["dediBoxes"])):
-                yaw, pitch, crouched = get_info_on_dedi(dedi_type,y)
-                utils.turn_to(pitch,yaw)
-                time.sleep(0.2*settings.lag_offset)
-                if crouched:
-                    player_state.human.crouch()
-                utils.press_key("Use")
-                time.sleep(0.2*settings.lag_offset)
-
+            if full_file[x]["active"] == True :
+                player_state.human.reset_crouch()# incase char is crouched
+                for y in range(len(full_file[x]["dediBoxes"])):
+                    yaw, pitch, crouched = get_info_on_dedi(dedi_type,y)
+                    utils.turn_to(pitch,yaw)
+                    time.sleep(0.3*settings.lag_offset)
+                    if crouched:
+                        player_state.human.crouch()
+                        time.sleep(0.2*settings.lag_offset)
+                    utils.press_key("Use")
+                    time.sleep(0.2*settings.lag_offset)
+            else:
+                dedi_deposit_deafult(dedi_height)
+    utils.set_pitch(0)            
+    utils.set_yaw(settings.station_yaw)
     player_state.human.reset_crouch()
-                
+    

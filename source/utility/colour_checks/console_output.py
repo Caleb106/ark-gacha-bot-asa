@@ -8,9 +8,10 @@ def output_mean_colour():
         roi = source.utility.screen.get_screen_roi(0,1419,2560,2)
     else:
         roi = source.utility.screen.get_screen_roi(0,1059,1920,2)
-    gray_roi = cv2.cvtColor(roi(), cv2.COLOR_BGR2GRAY)
+    gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     average = np.mean(gray_roi)
     print(f"the average console colour was : {average} go to console.json and set +and - 5 from this in the respected section IE upperbound = average+5 ")
+    return average
 
 
 if __name__ == "__main__":

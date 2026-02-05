@@ -2,7 +2,32 @@
     {
         "name": "pego1",
         "teleporter": "pego1",
+        "delay": 2700
+    },
+    {
+        "name": "pego2",
+        "teleporter": "pego2",
+        "delay": 6600
+    },
+    {
+        "name": "pego3",
+        "teleporter": "pego3",
+        "delay": 5700
+    },
+    {
+        "name": "pego4",
+        "teleporter": "pego4",
         "delay": 3300
+    },
+    {
+        "name": "pego5",
+        "teleporter": "pego5",
+        "delay": 3600
+    },
+    {
+        "name": "pego6",
+        "teleporter": "pego6",
+        "delay": 6600
     }
 
 ]

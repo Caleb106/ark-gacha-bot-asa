@@ -85,19 +85,26 @@ def normalize_yaw(yaw):
     return yaw 
 
 def set_yaw(yaw):
-    global current_yaw
+    global current_yaw    
     try:
         logs.logger.debug(f"setting yaw as {float(console.console_ccc()[3])}")
         current_yaw = float(console.console_ccc()[3])
     except Exception as e:
         logs.logger.error(f"error processing ccc_data[3]: {e}")
 
-    diff = ((yaw - current_yaw) + 180) % 360 - 180
+    try:# had an issue where this was a string for some reason
+        target = float(yaw)    
+        current = float(current_yaw)
+
+    except Exception as e:
+        logs.logger.error(f"error processing data into floats: {e}")
+    
+    diff = ((target - current) + 180) % 360 - 180
     if diff < 0:
         turn_left(-diff)
     else:
         turn_right(diff)
-    current_yaw = normalize_yaw(yaw)
+    current_yaw = normalize_yaw(target)
 
 def set_pitch(pitch):
     global current_pitch

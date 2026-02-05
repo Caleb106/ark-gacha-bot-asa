@@ -1,6 +1,7 @@
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 from source.logs import gachalogs as logs
-from source.ASA.player import player_state , tribelog
+from source.ASA.player import player_state , tribelog 
+from source.ASA.strucutres import bed
 import time 
 import settings
 import source.ASA.config 
@@ -30,10 +31,19 @@ def open():
         else:
             logs.logger.debug(f"teleporter opened")   
 
+        if attempts -1 == source.ASA.config.teleporter_open_attempts:
+            logs.logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
+            bed.spawn_in(settings.bed_spawn)
+            time.sleep(20)
+            utils.pitch_zero() # reseting the chars pitch/yaw
+            utils.turn_down(80)
+            time.sleep(5)
+            break
+        
         if attempts >= source.ASA.config.teleporter_open_attempts:
             logs.logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
             break
-            
+        
 def close():
     attempts = 0
     while is_open():

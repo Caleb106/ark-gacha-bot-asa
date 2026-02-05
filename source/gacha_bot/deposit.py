@@ -7,6 +7,7 @@ from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state
 import source.gacha_bot.config 
+from source.gacha_bot.structures import dedi
 
 def load_resolution_data(file_path):
     with open(file_path, 'r') as file:
@@ -146,8 +147,21 @@ def collect_grindables(metadata):
     time.sleep(0.2*settings.lag_offset)
     utils.turn_left(90)
     time.sleep(0.5*settings.lag_offset) # stopping hitting E on the fabricator and turing it off
-    dedi_deposit(settings.height_grind)
+    dedi.dedi_deposit("grindables",settings.height_grind)
     time.sleep(0.2*settings.lag_offset)
+    if source.gacha_bot.config.linked_poly == True:
+        utils.turn_left(90)
+        utils.turn_down(40)
+        inventory.open()
+        if template.template_await_true(template.check_template,1,"inventory",0.7):
+            time.sleep(0.2*settings.lag_offset)
+            player_inventory.search_in_inventory("poly")
+            player_inventory.transfer_all_inventory()
+            inventory.close()
+        template.template_await_false(template.check_template,1,"inventory",0.7)
+        time.sleep(0.2*settings.lag_offset)
+        utils.turn_right(90)
+        utils.turn_up(40)
     drop_useless()
 
 def vaults(metadata):
@@ -166,7 +180,7 @@ def deposit_all(metadata):
     logs.logger.debug("opening crystals")
     open_crystals()
     logs.logger.debug("depositing in ele dedi")
-    dedi_deposit(settings.height_ele)
+    dedi.dedi_deposit("deposit",settings.height_ele)
     vaults(metadata)
     if settings.height_grind != 0:
         logs.logger.debug("depositing in grinder")

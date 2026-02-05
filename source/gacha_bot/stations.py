@@ -73,7 +73,7 @@ class gacha_station(base_task):
 
         iguanadon.iguanadon(iguanadon_metadata)
         teleporter.teleport_not_default(gacha_metadata)
-        gacha.drop_off(gacha_metadata)
+        gacha.drop_off_nocrop(gacha_metadata)
 
     def get_priority_level(self):
         return 3

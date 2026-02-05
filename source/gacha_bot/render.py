@@ -16,7 +16,6 @@ def is_open():
 
 def enter_tekpod():
     global render_flag
-    buffs = buffs.check_buffs()
     attempts = 0 
     while not render_flag:
         attempts += 1
@@ -49,8 +48,8 @@ def enter_tekpod():
             time.sleep(0.5*settings.lag_offset)
             pyautogui.keyUp(chr(utils.keymap_return(local_player.get_input_settings("Use"))))
             time.sleep(1)
-
-        if buffs.check_buffs() == 1:
+        buff = buffs.check_buffs()
+        if buff.check_buffs() == 1:
             logs.logger.critical(f"bot is now in the render pod rendering the station after {attempts} attempts")
             render_flag = True
             utils.current_pitch = 0 # resetting the pitch for when char leaves the tekpod
@@ -64,12 +63,12 @@ def enter_tekpod():
 
 def leave_tekpod():
     global render_flag
-    buffs = buffs.check_buffs()
     player_state.reset_state() 
     time.sleep(0.2*settings.lag_offset)
     utils.press_key(local_player.get_input_settings("Use"))
     time.sleep(1*settings.lag_offset)
-    if buffs.check_buffs == 1:
+    buff = buffs.check_buffs()
+    if buff.check_buffs == 1:
         time.sleep(3)
         logs.logger.warning("bot didnt leave the tekpod first try we are retrying now")
         utils.press_key(local_player.get_input_settings("Use"))

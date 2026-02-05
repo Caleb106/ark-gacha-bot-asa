@@ -5,6 +5,8 @@ import settings
 from source.ASA import config
 from source.ASA.player import player_state
 
+resets = 0 #resets happen when char cannot tp therefore it is a major issue
+
 def is_open():
     return template.check_template("inventory",0.7)
     
@@ -67,6 +69,8 @@ def transfer_all_inventory():
 
 
 def implant_eat():
+    global resets
+    resets += 1
     attempts = 0
     while not template.check_template("death_regions",0.7):
         attempts += 1
