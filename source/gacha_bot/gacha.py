@@ -4,9 +4,10 @@ from source.utility import utils ,template , windows ,variables ,screen ,local_p
 from source.logs import gachalogs as logs
 from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
-from source.ASA.player import player_inventory , player_state
+from source.ASA.player import player_inventory , player_state ,console
 import source.gacha_bot.config 
-    
+import gacha_bot.structures.crop_plots as crop_plots
+
 def drop_off(metadata): #drop off for 150 stacks of seeds
     direction = metadata.side
     if direction == "right":
@@ -228,3 +229,28 @@ def iguanadon_gacha(metadata):
     #  
     #
     #
+
+
+def y_trap_harvest():
+    #fast travel to next gacha 
+    yaw,pitch = utils.get_yaw_pitch() # this is the beds view pitch will be 0 
+    #access gacha 
+    utils.turn_right(180)
+    #take all owl pellets(to refill crop plots)
+    inventory.open()
+    inventory.transfer_all_from()
+    inventory.close()
+    #turn back around till we are at a crop plot
+    utils.turn_right(90)
+    #harvest 3 stacks of crops 
+    crop_plots.harvest_3()
+    #turn back to gacha and drop all off
+    utils.turn_right(90)
+    inventory.open()
+    player_inventory.search_in_inventory("y")
+    player_inventory.transfer_all_inventory()#put all y traps inside
+    player_inventory.transfer_all_inventory()#put all snow pelets inside
+    inventory.close()
+    # look down and enter into bed
+    utils.turn_down(80)
+

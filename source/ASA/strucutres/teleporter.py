@@ -62,7 +62,7 @@ def teleport_not_default(arg):
         stationdata = arg
     else:
         stationdata = source.ASA.stations.custom_stations.get_station_metadata(arg)
-
+    
     teleporter_name = stationdata.name
     time.sleep(0.3*settings.lag_offset)
     utils.turn_down(80)
@@ -70,6 +70,7 @@ def teleport_not_default(arg):
     open() 
     time.sleep(0.2*settings.lag_offset) #waiting for teleport_icon to populate on the screen before we check
     if is_open():
+        player_state.human.tp = True
         if template.teleport_icon(0.55):
             start = time.time()
             logs.logger.debug(f"teleport icons are not on the teleport screen waiting for up to 10 seconds for them to appear")

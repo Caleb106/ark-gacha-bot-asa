@@ -1,0 +1,28 @@
+
+{   
+    "screeen_resolution":"VALUE DOES NOT MATTER", 
+    "base_path":"VALUE DOES NOT MATTER",
+    "lag_offset": 1.0,
+    "iguanadon": "GACHAIGUANADON",
+    "drop_off": "GACHADEDI",
+    "bed_spawn": "GACHARENDER",
+    "berry_station": "GACHABERRYSTATION",
+    "grindables": "GACHAGRINDABLES",
+    "berry_type": "mejoberry",
+    "station_yaw": 0,
+    "render_pushout": 0,
+    "height_ele": 3,
+    "height_grind": 3,
+    "command_prefix": "%",
+    "server_number": "0",
+    "singleplayer": false,
+    "external_berry": false,
+    "crafting": false,
+    "seeds_230": false,
+    "side_crop_plot": false,
+    "y_trap_bot": false,
+    "log_channel_gacha": "",
+    "log_active_queue": "",
+    "log_wait_queue": "",
+    "discord_api_key": ""
+}

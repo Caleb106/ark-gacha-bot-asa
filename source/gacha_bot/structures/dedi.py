@@ -91,7 +91,7 @@ def get_resource_from_dedis(resource):
         utils.set_yaw(settings.station_yaw) # its done this in the tp part to the dedis
         for y in range(len(resource_positions[x][1])):
             yaw, pitch, crouched =get_info_on_dedi(resource_positions[x][0],resource_positions[x][1][y])
-            utils.turn_to(pitch,yaw)
+            utils.turn_to(yaw,pitch)
             if crouched:
                 player_state.human.crouch()
             #open dedi
@@ -115,7 +115,7 @@ def dedi_deposit(dedi_type:str,dedi_height:int):
                 player_state.human.reset_crouch()# incase char is crouched
                 for y in range(len(full_file[x]["dediBoxes"])):
                     yaw, pitch, crouched = get_info_on_dedi(dedi_type,y)
-                    utils.turn_to(pitch,yaw)
+                    utils.turn_to(yaw,pitch)
                     time.sleep(0.3*settings.lag_offset)
                     if crouched:
                         player_state.human.crouch()

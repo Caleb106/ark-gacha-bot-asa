@@ -19,10 +19,12 @@ def enter_data(data:str):
         pyautogui.press("up")
     else:
         logs.logger.debug(f"using clipboard to put {data} into the console")
-        win32clipboard.OpenClipboard()
-        win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardText( data, win32clipboard.CF_TEXT )
-        win32clipboard.CloseClipboard()
+        try:
+            win32clipboard.OpenClipboard()
+            win32clipboard.EmptyClipboard()
+            win32clipboard.SetClipboardText( data, win32clipboard.CF_TEXT )
+        finally:
+            win32clipboard.CloseClipboard()
         pyautogui.hotkey("ctrl","v")
     last_command = data
     
@@ -43,13 +45,19 @@ def console_ccc():
                 break
         if is_open():
             middle = template.console_strip_check(template.console_strip_middle())
-            enter_data("ccc")
-            close_console(middle)
+            if attempts >= source.ASA.config.console_ccc_attempts:
+                console_write("ccc")
+            else: 
+                enter_data("ccc")
+                close_console(middle)
             
             time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
-            win32clipboard.OpenClipboard()
-            data = win32clipboard.GetClipboardData()
-            win32clipboard.CloseClipboard()
+            try:
+                win32clipboard.OpenClipboard()
+                data = win32clipboard.GetClipboardData()
+                win32clipboard.EmptyClipboard()
+            finally:
+                win32clipboard.CloseClipboard()
 
         if attempts >= source.ASA.config.console_ccc_attempts:
             logs.logger.error(f"CCC is still returning NONE after {attempts} attempts")
@@ -60,6 +68,7 @@ def console_ccc():
     return data
 
 def console_write(text:str):
+    global last_command
     attempts = 0
     while not is_open():
         attempts += 1
@@ -73,7 +82,7 @@ def console_write(text:str):
         middle = template.console_strip_check(template.console_strip_middle())
         enter_data(text)
         close_console(middle)
-        
+        last_command = text
         time.sleep(0.1*settings.lag_offset) # slow to try and prevent opening clipboard to empty data
 
 def close_console(middle):

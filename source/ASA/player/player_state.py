@@ -21,7 +21,9 @@ class charecter():
         self.health = 0
         self.water = 0
         self.food = 0 
-
+        self.bed = False
+        self.tp = False
+        
     def crouch(self):
         if not self.crouched:
             utils.press_key("Crouch")

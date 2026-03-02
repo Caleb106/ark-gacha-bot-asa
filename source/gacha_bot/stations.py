@@ -36,7 +36,7 @@ class gacha_station(base_task):
     def __init__(self,name,teleporter_name,direction):
         super().__init__()
         self.name = name
-        self.teleporter_name = teleporter_name
+        self.teleporter_name = teleporter_name # also the same as bed name for y
         self.direction = direction
 
 
@@ -53,27 +53,37 @@ class gacha_station(base_task):
 
         berry_metadata = custom_stations.get_station_metadata(settings.berry_station)
         iguanadon_metadata = custom_stations.get_station_metadata(settings.iguanadon)
+        if settings.y_trap_bot:
+            #check if we are on a teleporter or bed
+            #if on a bed fast travel 
+            #else we need to go to render and fast travel 
+            gacha.y_trap_harvest()
 
-        if (berry_station or time_between > config.time_to_reberry*60*60): # if time is greater than 4 hours since the last time you went to berry station 
-            teleporter.teleport_not_default(berry_metadata)                    # or if berry station is true( when you go to tekpod and drop all ) and the time between has been longer than 30 mins since youve last been 
-            if settings.external_berry: 
-                logs.logger.debug("sleeping for 20 seconds as external")
-                time.sleep(20)#letting station spawn in if you have to tp away
-            iguanadon.berry_station()
-            last_berry = time.time()
-            berry_station = False
-            temp = True
-        
-        teleporter.teleport_not_default(iguanadon_metadata) # iguanadon is a centeral tp
-        
-        if settings.external_berry and temp: # quick fix for level 1 bug
-            logs.logger.debug("reconnecting because of level 1 bug - you chose external berry will sleep for 60 seconds as a way to ensure that we are fully loaded in")
-            console.console_write("reconnect")
-            time.sleep(60) # takes a while for the reonnect to actually go into action
 
-        iguanadon.iguanadon(iguanadon_metadata)
-        teleporter.teleport_not_default(gacha_metadata)
-        gacha.drop_off_nocrop(gacha_metadata)
+        else:
+            if (berry_station or time_between > source.gacha_bot.config.time_to_reberry*60*60): # if time is greater than 4 hours since the last time you went to berry station 
+                teleporter.teleport_not_default(berry_metadata)                    # or if berry station is true( when you go to tekpod and drop all ) and the time between has been longer than 30 mins since youve last been 
+                if settings.external_berry: 
+                    logs.logger.debug("sleeping for 20 seconds as external")
+                    time.sleep(20)#letting station spawn in if you have to tp away
+                iguanadon.berry_station()
+                last_berry = time.time()
+                berry_station = False
+                temp = True
+            
+            teleporter.teleport_not_default(iguanadon_metadata) # iguanadon is a centeral tp
+            
+            if settings.external_berry and temp: # quick fix for level 1 bug
+                logs.logger.debug("reconnecting because of level 1 bug - you chose external berry will sleep for 60 seconds as a way to ensure that we are fully loaded in")
+                console.console_write("reconnect")
+                time.sleep(60) # takes a while for the reonnect to actually go into action
+
+            iguanadon.iguanadon(iguanadon_metadata)
+            teleporter.teleport_not_default(gacha_metadata)
+            if settings.side_crop_plot:
+                gacha.drop_off(gacha_metadata)
+            else:
+                gacha.drop_off_nocrop(gacha_metadata)
 
     def get_priority_level(self):
         return 3

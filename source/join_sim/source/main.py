@@ -55,7 +55,7 @@ def main_loop(server= server):
         while flag != True:
             
             if time.time() - time1 >= 15*60:
-                crash.crash.re_open_game()
+                crash.re_open_game()
                 time1 = time.time()
                 time.sleep(5)
             time.sleep(0.2)   

@@ -154,7 +154,14 @@ def zero():
     yaw_zero(ccc_data)
     pitch_zero(ccc_data)
     
-
+def get_yaw_pitch():
+    global current_pitch
+    global current_yaw
+    ccc_data = console.console_ccc()
+    current_yaw = ccc_data[3]
+    current_pitch = ccc_data[4]
+    return ccc_data[3],ccc_data[4] # yaw , pitch
+    
 def turn_right(degrees):
     global current_yaw
     windows.turn(degrees, 0)
@@ -179,7 +186,7 @@ def turn_up(degrees):
     windows.turn(0, -allowed)
     current_pitch += allowed
 
-def turn_to(pitch,yaw):
+def turn_to(yaw,pitch):
     global current_yaw
     global current_pitch
     inital_pitch = current_pitch
