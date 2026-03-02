@@ -6,7 +6,7 @@ from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state ,console
 import source.gacha_bot.config 
-import gacha_bot.structures.crop_plots as crop_plots
+import source.gacha_bot.structures.crop_plots as crop_plots
 
 def drop_off(metadata): #drop off for 150 stacks of seeds
     direction = metadata.side
