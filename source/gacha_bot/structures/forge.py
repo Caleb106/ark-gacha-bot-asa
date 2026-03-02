@@ -31,14 +31,14 @@ class forge():
         yaw_of_dedis = utils.normalize_yaw(self.metadata.yaw + 180)
         if resource == "fungal":
             player_state.human.crouch()
-            utils.turn_to(-15,yaw_of_dedis)
+            utils.turn_to(yaw_of_dedis,-15)
         else:
             player_state.human.reset_crouch() # just incase
-            utils.turn_to(0,yaw_of_dedis) # charcoal dedi 
+            utils.turn_to(yaw_of_dedis,0) # charcoal dedi 
             player_state.human.reset_crouch()
 
     def turn_to_forge(self):
-        utils.turn_to(0,self.metadata.yaw)
+        utils.turn_to(self.metadata.yaw,0)
 
     def input_all_into_forge(self):
         self.turn_to_forge()
