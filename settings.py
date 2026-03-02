@@ -8,7 +8,7 @@ import json
 with open("json_files/settings.json", "r", encoding='utf-8') as f:
     data = json.load(f)
 
-screen_resolution: str = data["screeen_resolution"] # No longer in use. Just here cause people are thoughtless.
+screen_resolution: str = data["screen_resolution"] # No longer in use. Just here cause people are thoughtless.
 base_path: str = data["base_path"] # No longer in use. Just here cause people are thoughtless.
 lag_offset: float = data["lag_offset"]
 iguanadon: str = data["iguanadon"]

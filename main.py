@@ -9,7 +9,7 @@ from source.utility.colour_checks import console_output,output_oranage_tp_pixel
 SETTINGS_FILE = "json_files/settings.json"
 
 default_settings = {
-    "screeen_resolution":"VALUE DOES NOT MATTER",
+    "screen_resolution":"VALUE DOES NOT MATTER",
     "base_path":"VALUE DOES NOT MATTER",
     "lag_offset": 1.0,
     "iguanadon": "GACHAIGUANADON",
