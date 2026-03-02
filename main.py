@@ -1,197 +1,212 @@
-import discord
-from discord.ext import commands
-from typing import Callable
-import asyncio
-import logs.botoptions as botoptions
-import pyautogui
-import settings
+import tkinter as tk
+from tkinter import ttk, messagebox
 import json
-import time
-import logs.discordbot as discordbot
-import bot.stations as stations
-import task_manager
-import win32gui
-import win32con
+import os
+import subprocess
 import sys
-import pygetwindow as gw
+import threading
+from source.utility.colour_checks import console_output,output_oranage_tp_pixel
+SETTINGS_FILE = "json_files/settings.json"
 
-intents = discord.Intents.default()
-pyautogui.FAILSAFE = False
-bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
+default_settings = {
+    "screeen_resolution":"VALUE DOES NOT MATTER",
+    "base_path":"VALUE DOES NOT MATTER",
+    "lag_offset": 1.0,
+    "iguanadon": "GACHAIGUANADON",
+    "drop_off": "GACHADEDI",
+    "bed_spawn": "GACHARENDER",
+    "berry_station": "GACHABERRYSTATION",
+    "grindables": "GACHAGRINDABLES",
+    "berry_type": "mejoberry",
+    "station_yaw": 0.0,
+    "render_pushout": 0.0,
+    "height_ele": 3,
+    "height_grind": 3,
+    "command_prefix": "%",
+    "server_number": "0",
+    "singleplayer": False,
+    "external_berry": False,
+    "crafting": False,
+    "seeds_230": False,
+    "side_crop_plot":False,
+    "y_trap_bot":False,
+    "log_channel_gacha": "",
+    "log_active_queue": "",
+    "log_wait_queue": "",
+    "discord_api_key": ""
+}
 
-running_tasks = []
 
-def load_json(json_file:str):
-    try:
-        with open(json_file, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []  
+def load_settings():
+    if not os.path.exists(SETTINGS_FILE):
+        save_settings(default_settings)
+        return default_settings.copy()
 
-def save_json(json_file:str,data):
-    with open(json_file, 'w') as f:
+    with open(SETTINGS_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_settings(data):
+    with open(SETTINGS_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
-async def send_new_logs():
-    log_channel = bot.get_channel(settings.log_channel_gacha)
-    last_position = 0
-    
-    while True:
-        with open("logs/logs.txt", 'r') as file:
-            file.seek(last_position)
-            new_logs = file.read()
-            if new_logs:
-                await log_channel.send(f"New logs:\n```{new_logs}```")
-                last_position = file.tell()
-        await asyncio.sleep(5)
 
-@bot.tree.command(name="add_gacha", description="add a new gacha station to the data")
-async def add_gacha(interaction: discord.Interaction, name: str, teleporter: str, resource_type: str ,direction: str):
-    data = load_json("json_files/gacha.json")
+class SettingsGUI:
 
-    for entry in data:
-        if entry["name"] == name:
-            await interaction.response.send_message(f"a gacha station with the name '{name}' already exists", ephemeral=True)
-            return
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Settings Launcher")
+        self.root.geometry("1400x800")
+
+        self.process = None
+        self.vars = {}
+
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        self.root.configure(bg="#2b2b2b")
+
+        style.configure(".", background="#2b2b2b", foreground="white")
+        style.configure("TLabel", background="#2b2b2b", foreground="white")
+        style.configure("TFrame", background="#2b2b2b")
+        style.configure("TButton", background="#3c3f41", foreground="white")
+        style.configure("TCheckbutton", background="#2b2b2b", foreground="white")
+        style.configure("TEntry",
+                        fieldbackground="#3c3f41",
+                        foreground="white")
+
+        main_frame = ttk.Frame(self.root, padding=10)
+        main_frame.pack(fill="both", expand=True)
+
+        main_frame.columnconfigure(0, weight=0)
+        main_frame.columnconfigure(1, weight=1)
+        main_frame.rowconfigure(0, weight=1)
+
+        left_frame = ttk.Frame(main_frame)
+        left_frame.grid(row=0, column=0, sticky="ns")
+
+        right_frame = ttk.Frame(main_frame)
+        right_frame.grid(row=0, column=1, sticky="nsew", padx=(15, 0))
+
+        self.settings = load_settings()
+
+        row = 0
+        for key, default_value in default_settings.items():
+            ttk.Label(left_frame, text=key).grid(row=row, column=0, sticky="w", pady=2)
+
+            value = self.settings.get(key, default_value)
+
+            if isinstance(default_value, bool):
+                var = tk.BooleanVar(value=value)
+                ttk.Checkbutton(left_frame, variable=var).grid(row=row, column=1, sticky="w")
+            else:
+                var = tk.StringVar(value=str(value))
+                show = "*" if key == "discord_api_key" else ""
+                ttk.Entry(left_frame, textvariable=var, show=show, width=25).grid(row=row, column=1)
+
+            self.vars[key] = var
+            row += 1
+
+        ttk.Button(left_frame, text="Save Settings",
+                   command=self.save).grid(row=row, column=0, columnspan=2, pady=10)
+
+        row += 1
+
+        ttk.Button(left_frame, text="Start Program",
+                   command=self.start_program).grid(row=row, column=0, columnspan=2, pady=5)
+
+        row += 1
+
+        ttk.Button(left_frame, text="Stop Program",
+                   command=self.stop_program).grid(row=row, column=0, columnspan=2, pady=5)
+        row += 1
         
-    new_entry = {
-        "name": name,
-        "teleporter": teleporter,
-        "resource_type": resource_type,
-        "side" : direction
-    }
-    data.append(new_entry)
+        ttk.Button(left_frame, text="Test console Colours",
+                   command=self.check_colours).grid(row=row, column=0, columnspan=2, pady=5)
 
-    save_json("json_files/gacha.json",data)
+        right_frame.columnconfigure(0, weight=1)
+        right_frame.rowconfigure(0, weight=1)
 
-    await interaction.response.send_message(f"added new gacha station: {name}")
+        self.log_text = tk.Text(
+            right_frame,
+            bg="#1e1e1e",
+            fg="white",
+            insertbackground="white",
+            wrap="word"
+        )
+        self.log_text.grid(row=0, column=0, sticky="nsew")
 
-@bot.tree.command(name="list_gacha", description="list all gacha stations")
-async def list_gacha(interaction: discord.Interaction):
+        scrollbar = ttk.Scrollbar(right_frame, command=self.log_text.yview)
+        scrollbar.grid(row=0, column=1, sticky="ns")
 
-    data = load_json("json_files/gacha.json")
-    if not data:
-        await interaction.response.send_message("no gacha stations found", ephemeral=True)
-        return
+        self.log_text.config(yscrollcommand=scrollbar.set)
 
+  
+    def save(self):
+        new_data = {}
 
-    response = "gacha Stations:\n"
-    for entry in data:
-        response += f"- **{entry['name']}**: teleporter `{entry['teleporter']}`, resource `{entry['resource_type']} gacha on the `{entry['side']}` side `\n"
+        try:
+            for key, var in self.vars.items():
+                value = var.get()
+                default_value = default_settings[key]
 
-    await interaction.response.send_message(response)
+                if isinstance(default_value, bool):
+                    new_data[key] = var.get()
+                elif isinstance(default_value, int):
+                    new_data[key] = int(value)
+                elif isinstance(default_value, float):
+                    new_data[key] = float(value)
+                else:
+                    new_data[key] = value
 
+            save_settings(new_data)
+            messagebox.showinfo("Success", "Settings saved successfully!")
 
-@bot.tree.command(name="add_pego", description="add a new pego station to the data")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid number format.")
 
-async def add_pego(interaction: discord.Interaction, name: str, teleporter: str, delay: int):
-    data = load_json("json_files/pego.json")
-
-    for entry in data:
-        if entry["name"] == name:
-            await interaction.response.send_message(f"a pego station with the name '{name}' already exists", ephemeral=True)
+    
+    def start_program(self):
+        if self.process and self.process.poll() is None:
+            messagebox.showinfo("Info", "Program already running.")
             return
-        
-    new_entry = {
-        "name": name,
-        "teleporter": teleporter,
-        "delay": delay
-    }
-    data.append(new_entry)
 
-    save_json("json_files/pego.json",data)
+        try:
+            self.process = subprocess.Popen(
+                [sys.executable, "-u", "main_program.py"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
 
-    await interaction.response.send_message(f"added new pego station: {name}")
+            threading.Thread(target=self.read_output, daemon=True).start()
 
-@bot.tree.command(name="list_pego", description="list all pego stations")
-async def list_pego(interaction: discord.Interaction):
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
-    data = load_json("json_files/pego.json")
-    if not data:
-        await interaction.response.send_message("no pego stations found", ephemeral=True)
-        return
+ 
+    def stop_program(self):
+        if self.process and self.process.poll() is None:
+            self.process.terminate()
+            self.process = None
+            messagebox.showinfo("Stopped","Program Terminated")
+        else:
+            messagebox.showinfo("Info","no running program ")
 
+    def read_output(self):
+        for line in self.process.stdout:
+            self.log_text.after(0, self.append_log, line)
 
-    response = "pego Stations:\n"
-    for entry in data:
-        response += f"- **{entry['name']}**: teleporter `{entry['teleporter']}`, delay `{entry['delay']}`\n"
+    def append_log(self, text):
+        self.log_text.insert("end", text)
+        self.log_text.see("end")
 
-    await interaction.response.send_message(response)
+    def check_colours(self):
+        self.append_log(f"the average console colour was :{console_output.output_mean_colour()} go to console.json and set +and - 5 from this in the respected section IE upperbound = average+5\n")
+        #self.append_log(f"{output_oranage_tp_pixel.get_orange_pixel()} -> these colours should be put into xxxxxx location in xxxx file ")
 
-@bot.tree.command(name="pause", description="sends the bot back to render bed for X amount of seconds")
-async def reset(interaction: discord.Interaction,time:int):
-    task = task_manager.scheduler
-    pause_task = stations.pause(time)
-    task.add_task(pause_task)
-    await interaction.response.send_message(f"pause task added will now pause for {time} seconds once the next task finishes")
-    
-async def embed_send(queue_type):
-    log_channel = 0
-    if queue_type == "active_queue":
-        log_channel = bot.get_channel(settings.log_active_queue)
-    else:
-        log_channel = bot.get_channel(settings.log_wait_queue)
-    while True:
-        embed_msg = await discordbot.embed_create(queue_type)
-        await log_channel.purge()
-        await log_channel.send(embed = embed_msg)
-        await asyncio.sleep(30)
-
-@bot.tree.command()
-async def start(interaction: discord.Interaction):
-    global running_tasks
-    logchn = bot.get_channel(settings.log_channel_gacha) 
-    if logchn:
-        await logchn.send(f'bot starting up now')
-    
-    # resetting log files
-    with open("logs/logs.txt", 'w') as file:
-        file.write(f"")
-    running_tasks.append(bot.loop.create_task(send_new_logs()))
-    
-    
-    await interaction.response.send_message(f"starting up bot now you have 5 seconds before start")
-    time.sleep(5)
-    running_tasks.append(asyncio.create_task(botoptions.task_manager_start()))
-    while task_manager.started == False:
-        await asyncio.sleep(1)
-    running_tasks.append(bot.loop.create_task(embed_send("active_queue")))
-    running_tasks.append(bot.loop.create_task(embed_send("waiting_queue")))
-    
-@bot.tree.command()
-async def shutdown(interaction: discord.Interaction):
-    await interaction.response.send_message("Shutting down script...")
-    print("Shutting down script...")
-    cmd_windows = [win for win in gw.getAllWindows() if "cmd" in win.title.lower() or "system32" in win.title.lower()]
-
-    if cmd_windows:
-        cmd_window = cmd_windows[0]  
-        hwnd = cmd_window._hWnd  
-
-        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE) 
-        win32gui.SetForegroundWindow(hwnd)  
-        time.sleep(1)         
-        win32gui.PostMessage(hwnd, win32con.WM_CLOSE, 0, 0)
-        print("Shutting down...")
-        sys.exit() 
-    else:
-        print("No CMD window found.")
-
-
-@bot.event
-async def on_ready():
-    await bot.tree.sync()
-    
-    logchn = bot.get_channel(settings.log_channel_gacha) 
-    if logchn:
-        await logchn.send(f'bot ready to start')
-    print (f'logged in as {bot.user}')
-
-api_key = settings.discord_api_key
-
-if __name__ =="__main__":
-    if len(settings.discord_api_key) < 4:
-        print("you need to have a valid discord API key for the bot to run")
-        print("please follow the instructions in the discord server to get your api key")
-        exit()
-    bot.run(api_key)
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = SettingsGUI(root)
+    root.mainloop()

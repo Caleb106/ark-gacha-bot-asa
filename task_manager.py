@@ -1,8 +1,8 @@
 import heapq
 import time
 import json
-import bot.stations as stations
-import logs.gachalogs as logs
+import source.gacha_bot.stations as stations
+import source.logs.gachalogs as logs
 from threading import Lock, Thread 
 
 global scheduler
@@ -167,7 +167,7 @@ def main():
         teleporter = entry_gacha["teleporter"]
         direction = entry_gacha["side"]
         resource = entry_gacha["resource_type"]
-        if resource == "collect":
+        if resource.lower() == "collect":
             depo = entry_gacha["depo_tp"]
             task = stations.snail_pheonix(name,teleporter,direction,depo)
         else:
