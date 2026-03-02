@@ -1,53 +1,53 @@
 [
     {
         "dediID": "deposit",
-        "active": true,
+        "active": false,
         "dediBoxes": [
             {
                 "resource": "element",
                 "location": {
-                    "yaw": -142.89,
-                    "pitch": 13.48
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": false
             },
             {
                 "resource": "element",
                 "location": {
-                    "yaw": -112.25,
-                    "pitch": 16.11
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": false
             },
             {
                 "resource": "flint",
                 "location": {
-                    "yaw": -156.02,
-                    "pitch": -23.99
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": false
             },
             {
                 "resource": "flint",
                 "location": {
-                    "yaw": -101.22,
-                    "pitch": -22.94
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": false
             },
             {
                 "resource": "fungal",
                 "location": {
-                    "yaw": -156.02,
-                    "pitch": -23.99
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": true
             },
             {
                 "resource": "fungal",
                 "location": {
-                    "yaw": -101.22,
-                    "pitch": -23.99
+                    "yaw": 0,
+                    "pitch": 0
                 },
                 "crouched": true
             }
