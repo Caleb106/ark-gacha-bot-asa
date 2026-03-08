@@ -1,6 +1,7 @@
+from source.gacha_bot import render
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 from source.logs import gachalogs as logs
-from source.ASA.player import player_inventory , tribelog
+from source.ASA.player import player_inventory , tribelog , player_state
 import time 
 import settings
 import source.ASA.config 
@@ -57,7 +58,19 @@ def spawn_in(bed_name:str):
         tribelog.close()
 
 def fast_travel(bed_name:str):
-
+    
+    if player_state.human.on_bed == False:
+        #need to go to render bed if on tp 
+        if player_state.human.on_tp:
+            logs.logger.debug(f"char is on a teleporter going to render bed to fast travel")
+            render.fast_travel_to_render()
+            time.sleep(0.2*settings.lag_offset)
+            utils.turn_down(15)
+    else:
+        utils.turn_down(80)
+    time.sleep(0.2*settings.lag_offset)
+    utils.press_key(local_player.get_input_settings("Use"))
+    print(bed_name)    
     if is_open():
         state = "death screen" if is_dead() else "fast travel screen"
         logs.logger.debug(f"char is in the {state}")
@@ -81,7 +94,8 @@ def fast_travel(bed_name:str):
             logs.logger.debug(f"white flash detected waiting for up too 5 seconds")
             template.template_await_false(template.white_flash,5)
 
+        player_state.human.is_on_bed()
         time.sleep(2) #spawn in animation is shorter than spawning in 
 
         tribelog.open()
-        tribelog.close()
+        tribelog.close()    

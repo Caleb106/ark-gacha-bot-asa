@@ -2,7 +2,7 @@ import time
 import settings
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 from source.logs import gachalogs as logs
-from source.ASA.strucutres import teleporter , inventory
+from source.ASA.strucutres import teleporter , inventory ,bed
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state ,console , tribelog
 import source.gacha_bot.config 
@@ -56,7 +56,10 @@ class gacha_station(base_task):
         if settings.y_trap_bot:
             #check if we are on a teleporter or bed
             #if on a bed fast travel 
-            #else we need to go to render and fast travel 
+            #else we need to go to render and fast travel
+            print(self.teleporter_name)
+            bed.fast_travel(self.teleporter_name)
+            print(self.teleporter_name)
             gacha.y_trap_harvest()
 
 

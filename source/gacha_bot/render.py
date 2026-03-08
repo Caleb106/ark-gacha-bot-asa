@@ -77,3 +77,14 @@ def leave_tekpod():
     utils.set_yaw(settings.station_yaw)
     time.sleep(0.5*settings.lag_offset)
     render_flag = False
+
+def fast_travel_to_render():
+    if render_flag:
+        #we need to leave tekpod and look at it 
+        leave_tekpod()
+        return
+    if player_state.human.on_tp:
+        #we need to tp to render tp
+        teleporter.teleport_not_default(settings.bed_spawn)
+        
+

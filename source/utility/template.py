@@ -39,7 +39,8 @@ roi_regions = {
     "indi_forge":{"start_x":1100, "start_y":245 ,"width":355 ,"height":70},
     "access_inv":{"start_x":550, "start_y":450 ,"width":1670 ,"height":880},
     "turn_off":{"start_x":1200, "start_y":1160,"width":200 ,"height":40},
-    "vault_full":{"start_x":1420, "start_y":700,"width":150 ,"height":40}
+    "vault_full":{"start_x":1420, "start_y":700,"width":150 ,"height":40},
+    "search": {"start_x":450, "start_y":1270 ,"width":120 ,"height":40}
 }
 def template_await_true(func,sleep_amount:float,*args) -> bool:
     count = 0 

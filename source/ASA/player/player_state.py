@@ -23,6 +23,8 @@ class charecter():
         self.food = 0 
         self.bed = False
         self.tp = False
+        self.on_bed = False
+        self.on_tp = True # should be starting on a tp anyway
         
     def crouch(self):
         if not self.crouched:
@@ -36,6 +38,14 @@ class charecter():
                 utils.press_key("Run")   
             time.sleep(0.1) # takes time to uncrouch ensuring that it has properly    
             self.crouched = False
+
+    def is_on_bed(self):
+        self.on_bed = True
+        self.on_tp = False
+    
+    def is_on_tp(self):
+        self.on_tp = True
+        self.on_bed = False
 
 human = charecter()
 

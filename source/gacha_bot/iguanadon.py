@@ -44,7 +44,7 @@ def seed(type):
         inventory.close()
         template.template_await_true(template.check_template,1,"seed_inv",0.7)
     utils.press_key("Use")
-    time.sleep(0.6*settings.lag_offset)
+    time.sleep(2*settings.lag_offset)
     inventory.open()
     if inventory.is_open():
         inventory.search_in_object("seed")

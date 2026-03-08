@@ -57,6 +57,8 @@ def close():
             break
     
 def teleport_not_default(arg):
+    if player_state.human.on_tp == False:
+        bed.fast_travel(settings.bed_spawn) # spawns on render bed which is on the tp
 
     if isinstance(arg, source.ASA.stations.custom_stations.station_metadata):
         stationdata = arg
@@ -70,17 +72,22 @@ def teleport_not_default(arg):
     open() 
     time.sleep(0.2*settings.lag_offset) #waiting for teleport_icon to populate on the screen before we check
     if is_open():
-        player_state.human.tp = True
+        player_state.human.is_on_tp()
         if template.teleport_icon(0.55):
             start = time.time()
             logs.logger.debug(f"teleport icons are not on the teleport screen waiting for up to 10 seconds for them to appear")
             template.template_await_true(template.teleport_icon,10,0.55)
             logs.logger.debug(f"time taken for teleporter icon to appear : {time.time() - start}")
-
-        windows.click(variables.get_pixel_loc("search_bar_bed_alive_x"),variables.get_pixel_loc("search_bar_bed_y")) #im lazy this is the same position as the teleporter search bar
-        utils.ctrl_a()
-        utils.write(teleporter_name)
-        time.sleep(0.2*settings.lag_offset)
+        counter = 0
+        while template.check_template_no_bounds("search",0.7):
+            counter += 1
+            windows.click(variables.get_pixel_loc("search_bar_bed_alive_x"),variables.get_pixel_loc("search_bar_bed_y")) #im lazy this is the same position as the teleporter search bar
+            utils.ctrl_a()
+            utils.write(teleporter_name)
+            time.sleep(0.2*settings.lag_offset)
+            if counter >= 3:
+                logs.logger.error(f"search still detected likely did type anything")
+                break
         windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y"))
         time.sleep(0.3*settings.lag_offset) #preventing the orange text from the starting teleport screen messing things up
         if not template.template_await_true(template.check_teleporter_orange,3):
