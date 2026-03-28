@@ -7,6 +7,7 @@ import settings
 import os 
 
 intents = discord.Intents.default()
+intents.message_content = True
 pyautogui.FAILSAFE = False
 bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
 
@@ -20,7 +21,7 @@ async def load_cogs():
 async def on_ready():
     await bot.tree.sync()
     
-    logchn = bot.get_channel(settings.log_channel_gacha) 
+    logchn = bot.get_channel(int(settings.log_channel_gacha))
     if logchn:
         await logchn.send(f'bot ready to start')
     print (f'logged in as {bot.user}')
