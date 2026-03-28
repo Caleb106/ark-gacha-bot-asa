@@ -58,8 +58,12 @@ def close():
     
 def teleport_not_default(arg):
     if player_state.human.on_tp == False:
+        time.sleep(0.2*settings.lag_offset)
+        utils.turn_down(80)
+        time.sleep(0.3*settings.lag_offset)
         bed.fast_travel(settings.bed_spawn) # spawns on render bed which is on the tp
-
+        time.sleep(0.2*settings.lag_offset)
+        
     if isinstance(arg, source.ASA.stations.custom_stations.station_metadata):
         stationdata = arg
     else:

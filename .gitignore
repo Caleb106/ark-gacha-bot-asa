@@ -3,3 +3,4 @@
 *.pyc
 settings.py
 /source/logs
+/json_files/backup2

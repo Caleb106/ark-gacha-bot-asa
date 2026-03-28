@@ -120,6 +120,9 @@ def dedi_deposit(dedi_type:str,dedi_height:int):
                     if crouched:
                         player_state.human.crouch()
                         time.sleep(0.2*settings.lag_offset)
+                    if not crouched and player_state.human.crouched == True:
+                        player_state.human.reset_crouch()
+                        time.sleep(0.2*settings.lag_offset)
                     utils.press_key("Use")
                     time.sleep(0.2*settings.lag_offset)
             else:

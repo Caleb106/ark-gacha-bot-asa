@@ -57,10 +57,10 @@ class gacha_station(base_task):
             #check if we are on a teleporter or bed
             #if on a bed fast travel 
             #else we need to go to render and fast travel
-            print(self.teleporter_name)
+            time.sleep(0.2)
             bed.fast_travel(self.teleporter_name)
-            print(self.teleporter_name)
             gacha.y_trap_harvest()
+            
 
 
         else:

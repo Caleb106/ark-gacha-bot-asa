@@ -96,16 +96,14 @@ def set_yaw(yaw):
         target = float(yaw)    
         current = float(current_yaw)
 
+        diff = ((target - current) + 180) % 360 - 180
+        if diff < 0:
+            turn_left(-diff)
+        else:
+            turn_right(diff)
+        current_yaw = normalize_yaw(target)
     except Exception as e:
-        logs.logger.error(f"error processing data into floats: {e}")
-    
-    diff = ((target - current) + 180) % 360 - 180
-    if diff < 0:
-        turn_left(-diff)
-    else:
-        turn_right(diff)
-    current_yaw = normalize_yaw(target)
-
+            logs.logger.error(f"error processing data into floats: {e}")
 def set_pitch(pitch):
     global current_pitch
     change = current_pitch - pitch 
@@ -158,23 +156,27 @@ def get_yaw_pitch():
     global current_pitch
     global current_yaw
     ccc_data = console.console_ccc()
-    current_yaw = ccc_data[3]
-    current_pitch = ccc_data[4]
+    current_yaw = float(ccc_data[3])
+    current_pitch = float(ccc_data[4])
     return ccc_data[3],ccc_data[4] # yaw , pitch
     
 def turn_right(degrees):
     global current_yaw
     windows.turn(degrees, 0)
+    current_yaw = float(current_yaw)
     current_yaw = normalize_yaw(current_yaw + degrees)
+    
 
 def turn_left(degrees):
     global current_yaw
     windows.turn(-degrees, 0)
+    current_yaw = float(current_yaw)
     current_yaw = normalize_yaw(current_yaw + (-degrees))
     
 
 def turn_down(degrees):
     global current_pitch
+    current_pitch = float(current_pitch)
     allowed = min(abs(player_pitch_minimum - current_pitch), degrees)
     windows.turn(0, allowed)
     current_pitch -= allowed
@@ -182,6 +184,7 @@ def turn_down(degrees):
 
 def turn_up(degrees):
     global current_pitch
+    current_pitch = float(current_pitch)
     allowed = min(abs(player_pitch_max - current_pitch), degrees)
     windows.turn(0, -allowed)
     current_pitch += allowed

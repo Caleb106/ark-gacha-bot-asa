@@ -19,12 +19,17 @@ def enter_data(data:str):
         pyautogui.press("up")
     else:
         logs.logger.debug(f"using clipboard to put {data} into the console")
-        try:
+        clipboard_opened = False
+        try: # my pc had issues where it would run threw this and not open clipoard then crash trying to close it
             win32clipboard.OpenClipboard()
+            clipboard_opened = True
             win32clipboard.EmptyClipboard()
-            win32clipboard.SetClipboardText( data, win32clipboard.CF_TEXT )
+            win32clipboard.SetClipboardText(data, win32clipboard.CF_TEXT)
+        except Exception as e:
+            print(f"Clipboard error: {e}")
         finally:
-            win32clipboard.CloseClipboard()
+            if clipboard_opened:
+                win32clipboard.CloseClipboard()
         pyautogui.hotkey("ctrl","v")
     last_command = data
     

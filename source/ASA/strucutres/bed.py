@@ -67,19 +67,21 @@ def fast_travel(bed_name:str):
             time.sleep(0.2*settings.lag_offset)
             utils.turn_down(15)
     else:
+        time.sleep(0.2*settings.lag_offset)
         utils.turn_down(80)
     time.sleep(0.2*settings.lag_offset)
     utils.press_key(local_player.get_input_settings("Use"))
-    print(bed_name)    
+    
+     #some reason takes ages to open up the fast travel screen
+    template.template_await_true(is_open,2*settings.lag_offset)
+    time.sleep(0.2*settings.lag_offset)
     if is_open():
         state = "death screen" if is_dead() else "fast travel screen"
         logs.logger.debug(f"char is in the {state}")
         search_bar_x = variables.get_pixel_loc("search_bar_bed_dead_x" if is_dead() else "search_bar_bed_alive_x")
         windows.click(search_bar_x, variables.get_pixel_loc("search_bar_bed_y")) #search bar y axis is the same for both death/alive 
-        
         utils.ctrl_a() #CTRL A removes all previous data in the search bar 
         utils.write(bed_name)
-
         time.sleep(0.2*settings.lag_offset)
         windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y"))
 

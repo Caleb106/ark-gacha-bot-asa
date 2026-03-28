@@ -18,7 +18,7 @@ def harvest_crop():
     inventory.close()
 
 def harvest_stack():
-    #should start of at pitch 0 
+    #should start off at pitch 0 
     pitch_locations = [0,-25,-12,-4,4,-5.5,1,9,17]
     player_state.human.crouch()
     for x in range(len(pitch_locations)-1):
@@ -27,7 +27,7 @@ def harvest_stack():
             player_state.human.reset_crouch()
         time.sleep(0.2*settings.lag_offset)
         harvest_crop()
-        time.sleep(0.2*settings.lag_offset)
+        time.sleep(0.3*settings.lag_offset)
 
     #reset pitch back to 0
     utils.set_pitch(0)

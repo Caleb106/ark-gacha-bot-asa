@@ -18,7 +18,7 @@ class discord_commands(commands.Cog):
         self.start_time = 0
 
     async def send_new_logs(self):
-        log_channel = self.bot.get_channel(settings.log_channel_gacha)
+        log_channel = self.bot.get_channel(int(settings.log_channel_gacha))
         last_position = 0
         
         while True:
@@ -36,9 +36,9 @@ class discord_commands(commands.Cog):
     async def embed_send(self,queue_type):
         log_channel = 0
         if queue_type == "active_queue":
-            log_channel = self.bot.get_channel(settings.log_active_queue)
+            log_channel = self.bot.get_channel(int(settings.log_active_queue))
         else:
-            log_channel = self.bot.get_channel(settings.log_wait_queue)
+            log_channel = self.bot.get_channel(int(settings.log_wait_queue))
         while True:
             embed_msg = await discordbot.embed_create(queue_type)
             await log_channel.purge()
@@ -56,7 +56,7 @@ class discord_commands(commands.Cog):
     @app_commands.command()
     async def start(self,interaction: discord.Interaction):
         self.start_time = time.time()
-        logchn = self.bot.get_channel(settings.log_channel_gacha) 
+        logchn = self.bot.get_channel(int(settings.log_channel_gacha))
         if logchn:
             await logchn.send(f'bot starting up now')
         
