@@ -7,7 +7,6 @@ import settings
 import os 
 
 intents = discord.Intents.default()
-intents.message_content = True
 pyautogui.FAILSAFE = False
 bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
 
