@@ -297,17 +297,17 @@ lower_console_bound = bounds[0]["lower_bound"]
 
 def console_strip_bottom():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1404,2560,1)
+        roi = screen.get_screen_roi(0,1419,2560,2)
     else:
-        roi = screen.get_screen_roi(0,1059,1920,1)
+        roi = screen.get_screen_roi(0,1059,1920,2)
     return roi
 
 def console_strip_middle():
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1055,2560,1)
+        roi = screen.get_screen_roi(0,1065,2560,2)
     else:
-        roi = screen.get_screen_roi(0,795,1920,1)
-    return roi 
+        roi = screen.get_screen_roi(0,795,1920,2)
+    return roi  
 
 def console_strip_check(roi):
     gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
