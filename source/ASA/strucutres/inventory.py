@@ -93,7 +93,7 @@ def get_inv_slot_loc(column:int,row:int):
     x = inv_slots["x"] + (column *inv_slots["distance"]) + 30  # 30 is an ofset actual location is top left
     y = inv_slots["y"] + (row *inv_slots["distance"]) + 30
     if screen.screen_resolution == 1080:
-        return (x * 0.75,y * 0.75)    
+        return (round(x * 0.75), round(y * 0.75))        
     else:
         return (x,y)
 
