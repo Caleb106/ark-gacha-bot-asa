@@ -69,12 +69,13 @@ ctypes.windll.user32.PostMessageW.restype = ctypes.c_int
 
 def move_mouse(x, y):
 
-    scaled_x = int(x * 65535 / screen.mon["width"])
-    scaled_y = int(y * 65535 / screen.mon["height"])
+    scaled_x = round(x * 65535 / screen.mon["width"])
+    scaled_y = round(y * 65535 / screen.mon["height"])
 
     ctypes.windll.user32.mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE, scaled_x, scaled_y, 0, 0)
 
 def click(x, y):
+    x, y = round(x), round(y)
     lparam = (y << 16) | x
     ctypes.windll.user32.PostMessageW(hwnd, WM_LBUTTONDOWN, 0, lparam)
     ctypes.windll.user32.PostMessageW(hwnd, WM_LBUTTONUP, 0, lparam)
