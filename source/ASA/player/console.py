@@ -10,7 +10,7 @@ import win32clipboard
 last_command = ""
 
 def is_open():
-    return template.console_strip_check(template.console_strip_bottom()) or template.console_strip_check(template.console_strip_middle()) or template.check_if_same_colour(template.console_strip_bottom())
+    return template.check_both_strips()
 
 def enter_data(data:str):
     global last_command

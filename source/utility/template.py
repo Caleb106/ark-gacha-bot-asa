@@ -265,7 +265,7 @@ def white_flash():
     percentage_255 = (num_255_pixels / total_pixels) * 100
     logger.debug(f"white flash {percentage_255 >= 80}")
     return percentage_255 >= 80
-
+#### DEPRECIATED FUNCTIONS START ####
 def get_file():
     file_path = "json_files/console.json"
     try:
@@ -294,50 +294,50 @@ def set_bounds(lower_bound: int, upper_bound: int):
 bounds = get_bounds()
 upper_console_bound = bounds[0]["upper_bound"]
 lower_console_bound = bounds[0]["lower_bound"]
+#### DEPRECIATED FUNCTIONS END ####
 
-def console_strip_bottom():
+
+def console_strip_bottom() -> cv2.Mat:
+    SEARCH_HEIGHT: int = 40 # height of the search region
+    # 40px height from the bottom of the screen, full width of the screen.
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1419,2560,2)
+        roi = screen.get_screen_roi(0, 1440 - SEARCH_HEIGHT, 2560, SEARCH_HEIGHT) # 1400 <-> 1440
     else:
-        roi = screen.get_screen_roi(0,1059,1920,2)
+        roi = screen.get_screen_roi(0, 1080 - SEARCH_HEIGHT, 1920, SEARCH_HEIGHT) # 1040 <-> 1080
     return roi
 
-def console_strip_middle():
+def console_strip_middle() -> cv2.Mat:
+    SEARCH_HEIGHT: int = 40 # height of the search region
+    # 40px height from a set bottom, full width of the screen.
     if screen.screen_resolution == 1440:
-        roi = screen.get_screen_roi(0,1065,2560,2)
+        roi = screen.get_screen_roi(0, 1080 - SEARCH_HEIGHT, 2560, SEARCH_HEIGHT) # 1040 <-> 1080
     else:
-        roi = screen.get_screen_roi(0,795,1920,2)
+        roi = screen.get_screen_roi(0, 810 - SEARCH_HEIGHT, 1920, SEARCH_HEIGHT) # 770 <-> 810
     return roi  
 
-def console_strip_check(roi):
-    gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    gray_mask = (gray_roi >= lower_console_bound) & (gray_roi <= upper_console_bound)
-    num_gray_pixels = np.count_nonzero(gray_mask)
+def console_row_check(roi: cv2.Mat, samples: int = 50) -> bool:
+    """Randomly samples pixels from roi and checks they're all the same color (uniform strip)."""
+    height, width = roi.shape[:2]
 
-    total_pixels = gray_roi.size
-    percentage_gray = (num_gray_pixels / total_pixels) * 100
-    logger.debug(f"percentage gray {percentage_gray}")
-    return percentage_gray >= 80
-
-def check_both_strips():
-    roi1 = console_strip_bottom()
-    roi2 = console_strip_middle()
-    return console_strip_check(roi1) or console_strip_check(roi2)
-
-def check_if_same_colour(roi):
-    '''checks the part of the console strip at a few locations to see if they are the same colour if they are assume that it is open'''
-    gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    height, width = gray_roi.shape # height always = 2 pixels
-
-    pixels = []
-    for _ in range(50):
-        x = random.randint(0, width - 1)
-        y = random.randint(0, height - 1)
-        pixels.append(gray_roi[y, x])
-    if all(pixel == pixels[0] for pixel in pixels):
-        logger.error(f"console strip is likley -> {pixels[0]} please change the console bounds +-5 ")
+    pixels = [
+        roi[random.randint(0, height - 1), random.randint(0, width - 1)]
+        for _ in range(samples)
+    ]
 
     return all(pixel == pixels[0] for pixel in pixels)
+
+def console_strip_check(roi: cv2.Mat) -> bool:
+    roi: cv2.Mat = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+
+    for y in range(roi.shape[0]):
+        if console_row_check(roi[y:y+1, :]):
+            return True
+
+    return False
+
+def check_both_strips() -> bool:
+    roi1, roi2 = console_strip_bottom(), console_strip_middle()
+    return console_strip_check(roi1) or console_strip_check(roi2)
 
 def check_items():
     region = roi_regions["item_locations"]

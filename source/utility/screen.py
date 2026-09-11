@@ -6,6 +6,7 @@ import ctypes
 import time 
 import source.utility.w_handle as w_handle
 
+sct = mss.mss()
 
 def find_screen_size():
     hwnd = w_handle.HWND
@@ -29,12 +30,14 @@ else:
     input(f"")# prevents the closing of the window instantly  
     exit()
 
-def get_screen_roi(start_x, start_y, width, height):
-
-    region = {"top": start_y, "left": start_x, "width": width, "height": height}
-    with mss.mss() as sct:
-        screenshot = sct.grab(region)
-        return np.array(screenshot)
+def get_screen_roi(start_x, start_y, width, height) -> np.ndarray:
+    region = {
+        "top": start_y,
+        "left": start_x,
+        "width": width,
+        "height": height
+    }
+    return np.array(sct.grab(region))
     
 if __name__ =="__main__":
     pass
