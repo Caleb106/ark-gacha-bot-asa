@@ -1,5 +1,5 @@
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
-from source.logs import gachalogs as logs
+from logger.logger import logger
 import time 
 import pyautogui
 
@@ -20,11 +20,11 @@ def access_shoulder_mount():
         pyautogui.keyUp(chr(utils.keymap_return(local_player.get_input_settings("Reload"))))
         
         if template.template_await_true(template.check_template,2,"inventory",0.7):
-            logs.logger.debug(f"inventory opened")
+            logger.debug(f"inventory opened")
             if template.template_await_true(template.check_template,1,"waiting_inv",0.8):
                 start = time.time()
-                logs.logger.debug(f"waiting for up too 10 seconds due to the reciving remote inventory is present")
+                logger.debug(f"waiting for up too 10 seconds due to the reciving remote inventory is present")
                 template.template_await_false(template.check_template,10,"waiting_inv",0.8)
-                logs.logger.debug(f"{time.time() - start} seconds taken for the reciving remote inventory to go away")
+                logger.debug(f"{time.time() - start} seconds taken for the reciving remote inventory to go away")
 
 

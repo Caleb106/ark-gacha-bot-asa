@@ -1,5 +1,5 @@
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.ASA.player import player_state , tribelog 
 from source.ASA.strucutres import bed
 import time 
@@ -19,21 +19,21 @@ def open():
     attempts = 0 
     while not is_open():
         attempts += 1
-        logs.logger.debug(f"trying to open teleporter {attempts} / {source.ASA.config.teleporter_open_attempts}")
+        logger.debug(f"trying to open teleporter {attempts} / {source.ASA.config.teleporter_open_attempts}")
         utils.press_key("Use")
     
         if not template.template_await_true(template.check_template,2,"teleporter_title",0.7):
-            logs.logger.warning("teleporter didnt open retrying now")
+            logger.warning("teleporter didnt open retrying now")
             player_state.check_state()
             # check state of char which should close out of any windows we are in or rejoin the game
             utils.pitch_zero() # reseting the chars pitch/yaw
             utils.turn_down(80)
             time.sleep(0.2*settings.lag_offset) 
         else:
-            logs.logger.debug(f"teleporter opened")   
+            logger.debug(f"teleporter opened")
 
         if attempts -1 == source.ASA.config.teleporter_open_attempts:
-            logs.logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
+            logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
             bed.spawn_in(settings.bed_spawn)
             time.sleep(20)
             utils.pitch_zero() # reseting the chars pitch/yaw
@@ -42,19 +42,19 @@ def open():
             break
         
         if attempts >= source.ASA.config.teleporter_open_attempts:
-            logs.logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
+            logger.error(f"unable to open up the teleporter after {source.ASA.config.teleporter_open_attempts} attempts")
             break
         
 def close():
     attempts = 0
     while is_open():
         attempts += 1
-        logs.logger.debug(f"trying to close the teleporter {attempts} / {source.ASA.config.teleporter_close_attempts}")
+        logger.debug(f"trying to close the teleporter {attempts} / {source.ASA.config.teleporter_close_attempts}")
         windows.click(variables.get_pixel_loc("back_button_tp_x"),variables.get_pixel_loc("back_button_tp_y"))
         time.sleep(0.2*settings.lag_offset)
 
         if attempts >= source.ASA.config.teleporter_close_attempts:
-            logs.logger.error(f"unable to close the teleporter after {source.ASA.config.teleporter_close_attempts} attempts")
+            logger.error(f"unable to close the teleporter after {source.ASA.config.teleporter_close_attempts} attempts")
             break
     
 def teleport_not_default(arg):
@@ -67,7 +67,7 @@ def teleport_not_default(arg):
     teleporter_name = stationdata.name
 
     if current_teleport == teleporter_name:
-        logs.logger.debug("skipping teleport we are teleporting to the same location we are currently on reseting yaw and pitch just incase")
+        logger.debug("skipping teleport we are teleporting to the same location we are currently on reseting yaw and pitch just incase")
         return 
 
     if player_state.human.on_tp == False:
@@ -88,9 +88,9 @@ def teleport_not_default(arg):
         player_state.human.is_on_tp()
         if template.teleport_icon(0.55):
             start = time.time()
-            logs.logger.debug(f"teleport icons are not on the teleport screen waiting for up to 10 seconds for them to appear")
+            logger.debug(f"teleport icons are not on the teleport screen waiting for up to 10 seconds for them to appear")
             template.template_await_true(template.teleport_icon,10,0.55)
-            logs.logger.debug(f"time taken for teleporter icon to appear : {time.time() - start}")
+            logger.debug(f"time taken for teleporter icon to appear : {time.time() - start}")
         counter = 0
         while template.check_template_no_bounds("search",0.7):
             counter += 1
@@ -99,12 +99,12 @@ def teleport_not_default(arg):
             utils.write(teleporter_name)
             time.sleep(0.2*settings.lag_offset)
             if counter >= 3:
-                logs.logger.error(f"search still detected likely did type anything")
+                logger.error(f"search still detected likely did type anything")
                 break
         windows.click(variables.get_pixel_loc("first_bed_slot_x"),variables.get_pixel_loc("first_bed_slot_y"))
         time.sleep(0.3*settings.lag_offset) #preventing the orange text from the starting teleport screen messing things up
         if not template.template_await_true(template.check_teleporter_orange,3):
-            logs.logger.warning(f"orange pixel for teleporter ready not found likely already on the tp we are just exiting the tp treating it as the tp we should be on")
+            logger.warning(f"orange pixel for teleporter ready not found likely already on the tp we are just exiting the tp treating it as the tp we should be on")
             close() # closing out as either the TP couldnt be found however we still want to change to the station yaw so we still continue
 
         else:
@@ -114,7 +114,7 @@ def teleport_not_default(arg):
             windows.click(variables.get_pixel_loc("spawn_button_x"),variables.get_pixel_loc("spawn_button_y"))
 
             if template.template_await_true(template.white_flash,2):
-                logs.logger.debug(f"white flash detected waiting for up too 5 seconds")
+                logger.debug(f"white flash detected waiting for up too 5 seconds")
                 template.template_await_false(template.white_flash,5)
             tribelog.open() 
             tribelog.close()

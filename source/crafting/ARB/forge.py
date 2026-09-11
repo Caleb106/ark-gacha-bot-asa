@@ -3,7 +3,7 @@ import ASA.stations.custom_stations
 import ASA.strucutres
 import ASA.strucutres.teleporter
 import template
-import logs.gachalogs as logs
+from logger.logger import logger
 import utils
 import windows
 import variables
@@ -20,12 +20,12 @@ def indi_forge(metadata):
     ASA.strucutres.inventory.open()
     attempt = 0
     while not ASA.strucutres.inventory.is_open():
-        logs.logger.debug(f"the indiforge NAME could not be accessed retrying {attempt} / {bot.config.gacha_attempts}")
+        logger.debug(f"the indiforge NAME could not be accessed retrying {attempt} / {bot.config.gacha_attempts}")
         utils.zero()
         utils.set_yaw(metadata.yaw)
         ASA.strucutres.inventory.open()
         if attempt >= bot.config.gacha_attempts:
-            logs.logger.error(f"the indiforge NAME could not be accesssed after {attempt} attempts")
+            logger.error(f"the indiforge NAME could not be accesssed after {attempt} attempts")
             break
         
     # check indi forge

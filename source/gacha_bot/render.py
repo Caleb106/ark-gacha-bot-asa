@@ -1,7 +1,7 @@
 import time 
 import settings
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state , buffs
@@ -20,7 +20,7 @@ def enter_tekpod():
     while not render_flag:
         attempts += 1
         if attempts == source.gacha_bot.config.render_attempts:
-            logs.logger.warning(f"{attempts} attempts however bot could not get into the render bed we are dieing and respawning to try and fix this")
+            logger.warning(f"{attempts} attempts however bot could not get into the render bed we are dieing and respawning to try and fix this")
             player_inventory.implant_eat()
             player_state.check_state() # this should respawn our char in the bed
         time.sleep(0.5*settings.lag_offset)    
@@ -50,15 +50,15 @@ def enter_tekpod():
             time.sleep(1)
         buff = buffs.check_buffs()
         if buff.check_buffs() == 1:
-            logs.logger.critical(f"bot is now in the render pod rendering the station after {attempts} attempts")
+            logger.critical(f"bot is now in the render pod rendering the station after {attempts} attempts")
             render_flag = True
             utils.current_pitch = 0 # resetting the pitch for when char leaves the tekpod
         else:
             player_state.check_state()
-            logs.logger.error(f"we were unable to get into the tekpod on the {attempts} attempt retrying now")
+            logger.error(f"we were unable to get into the tekpod on the {attempts} attempt retrying now")
 
         if attempts >= source.gacha_bot.config.render_attempts:
-            logs.logger.error(f"we were unable to get into the tekpod after {attempts} attempts pausing execution to avoid unbreakable loops")
+            logger.error(f"we were unable to get into the tekpod after {attempts} attempts pausing execution to avoid unbreakable loops")
             break
 
 def leave_tekpod():
@@ -70,7 +70,7 @@ def leave_tekpod():
     buff = buffs.check_buffs()
     if buff.check_buffs == 1:
         time.sleep(3)
-        logs.logger.warning("bot didnt leave the tekpod first try we are retrying now")
+        logger.warning("bot didnt leave the tekpod first try we are retrying now")
         utils.press_key(local_player.get_input_settings("Use"))
         time.sleep(1*settings.lag_offset)
     utils.current_yaw = settings.render_pushout

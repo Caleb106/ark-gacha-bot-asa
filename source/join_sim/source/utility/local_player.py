@@ -1,3 +1,4 @@
+from logger.logger import logger
 import re 
 import os
 import psutil
@@ -5,7 +6,7 @@ from pathlib import Path
 import time 
 
 def path(process_name):
-    print("finding path now ")
+    logger.info("finding path now ")
     for proc in psutil.process_iter(attrs=[ 'name', 'exe']):
         
         if proc.info['name'] == process_name:
@@ -15,7 +16,7 @@ def path(process_name):
 try:
     base_path = path("ArkAscended.exe" ).parents[3]
 except Exception as e:
-    print(f"{e} PLEASE OPEN UP ARK TO FIX THIS ERROR THEN RESTART THE SCRIPT")
+    logger.error(f"{e} PLEASE OPEN UP ARK TO FIX THIS ERROR THEN RESTART THE SCRIPT")
     time.sleep(10)
     exit()
 

@@ -1,4 +1,4 @@
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 import time 
 import settings
@@ -17,12 +17,12 @@ class check_buffs():
         attempts = 0 
         while self.is_open():
             attempts += 1
-            logs.logger.debug(f"trying to open up the buff menu {attempts} / {source.ASA.config.buff_open_attempts}")
+            logger.debug(f"trying to open up the buff menu {attempts} / {source.ASA.config.buff_open_attempts}")
             windows.click(variables.get_pixel_loc("buff_button_x"),variables.get_pixel_loc("buff_button_y"))
             time.sleep(0.2*settings.lag_offset)
 
             if attempts >= source.ASA.config.buff_open_attempts:
-                logs.logger.error(f"bot is unable to open up the buffs menu ")
+                logger.error(f"bot is unable to open up the buffs menu ")
 
     def is_starving(self):
         return template.check_buffs("starving",0.7)

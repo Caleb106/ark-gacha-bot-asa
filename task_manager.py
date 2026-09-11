@@ -2,7 +2,7 @@ import heapq
 import time
 import json
 import source.gacha_bot.stations as stations
-import source.logs.gachalogs as logs
+from logger.logger import logger
 from threading import Lock, Thread 
 
 global scheduler
@@ -80,7 +80,7 @@ class task_scheduler(metaclass=SingletonMeta):
         task.has_run_before = True
     
         self.waiting_queue.add(task, task.get_priority_level(), next_execution_time)
-        print(f"Added task {task.name} to waiting queue ") # might need to remove this if you have LOADS OF stations causing long messages
+        logger.info(f"Added task {task.name} to waiting queue ") # might need to remove this if you have LOADS OF stations causing long messages
 
             
     def run(self):
@@ -115,20 +115,20 @@ class task_scheduler(metaclass=SingletonMeta):
         if exec_time <= current_time:
             
             if task.name != self.prev_task_name:
-                logs.logger.info(f"Executing task: {task.name}")
+                logger.info(f"Executing task: {task.name}")
             task.execute()  
             
             self.prev_task_name = task.name
             if task.name != "pause":
                 self.move_to_waiting_queue(task)
             else:
-                print("pause task skipping adding back ")
+                logger.info("pause task skipping adding back ")
         else:
             
             self.active_queue.add(task, priority, exec_time)
 
     def move_to_waiting_queue(self, task):
-        logs.logger.debug(f"adding {task.name} to waiting queue" ) 
+        logger.debug(f"adding {task.name} to waiting queue" )
         next_execution_time = time.time() + task.get_requeue_delay()
         priority_level = task.get_priority_level()
         self.waiting_queue.add(task,priority_level , next_execution_time)
@@ -140,11 +140,11 @@ def load_resolution_data(file_path):
         with open(file_path, 'r') as file:
             data = file.read().strip()
             if not data:
-                logs.logger.warning(f"warning: {file_path} is empty no tasks added.")
+                logger.warning(f"warning: {file_path} is empty no tasks added.")
                 return []
             return json.loads(data)
     except (json.JSONDecodeError, FileNotFoundError) as e:
-        print(f"error loading JSON from {file_path}: {e}")
+        logger.error(f"error loading JSON from {file_path}: {e}")
         return []
 
 
@@ -175,7 +175,7 @@ def main():
         scheduler.add_task(task)
         
     scheduler.add_task(stations.render_station())
-    logs.logger.info("scheduler now running")
+    logger.info("scheduler now running")
     started = True
     scheduler.run()
 

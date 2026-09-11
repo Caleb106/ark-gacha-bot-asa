@@ -2,14 +2,15 @@
 import logger`.
 
 Everything written through it lands in logger/logs.log, and - once the
-dashboard is up - in the on-screen Event Log too, because DashboardPage
-attaches a handler to this same logger (see UI.DashboardLogHandler). Code in
-the bot doesn't need to know the UI exists; it just logs.
+dashboard is up - in the on-screen Event Log too. GUI-owned bot processes
+send records over stdout for the parent to write and display. Standalone
+processes write the file directly. Code in the bot does not
+need to know which mode is active; it just logs.
 
 Set up the moment this module is imported:
 
-  - Each launch starts a fresh logs.log, and the previous run is kept beside
-    it under the date it was written - logs_2026-07-28_14-52-31.log - back to
+  - Each standalone/GUI launch starts a fresh logs.log, and the previous run
+    is kept in archives/ under its date - logs_2026-07-28_14-52-31.log - back to
     KEPT_RUNS of them. A user who restarts the app before reporting a bug
     still has the log that matters, and can tell which one it is.
   - Crashes are logged, with their full traceback, from all three places
@@ -24,6 +25,7 @@ logged.
 """
 import glob
 import inspect
+import json
 import logging
 import os
 import sys
@@ -48,6 +50,28 @@ ARCHIVE_STAMP = "%Y-%m-%d_%H-%M-%S"
 ARCHIVE_DIR = os.path.join(LOG_DIR, "archives")
 # How many previous runs to keep beside the current logs.log.
 KEPT_RUNS = 3
+
+# GUI-owned subprocesses send records to the parent, which owns the log file.
+PIPE_ENV = "ASA_BOT_LOG_PIPE"
+PIPE_PREFIX = "ASA_LOG_RECORD:"
+TEMPLATE_LEVEL = 5
+logging.addLevelName(TEMPLATE_LEVEL, "TEMPLATE")
+
+
+class PipeFormatter(logging.Formatter):
+    def format(self, record):
+        data = {key: getattr(record, key) for key in (
+            "name", "levelno", "pathname", "lineno", "funcName", "created", "msecs")}
+        data["message"] = super().format(record)
+        return PIPE_PREFIX + json.dumps(data, ensure_ascii=True)
+
+
+class SharedLogHandler(logging.Handler):
+    """Forward standard-library/dependency records to the application's logger."""
+
+    def emit(self, record):
+        if logger.isEnabledFor(record.levelno):
+            logger.handle(record)
 
 
 def archive_previous_run() -> None:
@@ -129,26 +153,39 @@ class Logging(logging.Logger):
 
     def __init__(self, level: _LOG_LEVEL = "DEBUG"):
         super().__init__("logger", self._LOG_LEVEL_MAP[level])
-        # Date the previous run's file and prune old ones before opening,
-        # so this run starts on a clean logs.log.
-        archive_previous_run()
+        # Only the owning process archives/writes the shared file.
+        piped = os.environ.get(PIPE_ENV) == "1"
+        if not piped:
+            archive_previous_run()
         # mode="a", though the file is expected to be gone by now: if
         # archiving failed, appending to the old log beats truncating it.
         # utf-8 explicitly: Windows otherwise opens the file as cp1252,
         # which raises UnicodeEncodeError on any non-latin-1 character in
         # a log message and silently drops the whole line.
-        handler = logging.FileHandler(LOG_PATH, mode="a", encoding="utf-8")
-        handler.setFormatter(logging.Formatter(
-            fmt="%(asctime)s | %(filename)-14s | %(levelname)-8s | %(funcName)s | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S")
-        )
+        if piped:
+            handler = logging.StreamHandler(sys.stdout)
+            handler.setFormatter(PipeFormatter())
+        else:
+            handler = logging.FileHandler(LOG_PATH, mode="a", encoding="utf-8")
+            handler.setFormatter(logging.Formatter(
+                fmt="%(asctime)s | %(filename)-14s | %(levelname)-8s | %(funcName)s | %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S"))
         self.addHandler(handler)
+        self.propagate = False
         self.addFilter(FuncNameFilter())
         self._install_exception_hooks()
 
-        stream_handler = logging.StreamHandler(sys.stdout)
-        stream_handler.setFormatter(logging.Formatter(fmt="%(levelname)s|%(message)s"))
-        self.addHandler(stream_handler)
+    def setLevel(self, level):
+        super().setLevel(level)
+        # This directly constructed logger is outside logging's name registry,
+        # so the manager's cache clearing does not reach this instance.
+        self._cache.clear()
+
+    def template(self, message, *args, **kwargs):
+        """Very noisy image-matching diagnostics; disabled at the default DEBUG level."""
+        if self.isEnabledFor(TEMPLATE_LEVEL):
+            kwargs.setdefault("stacklevel", 2)
+            self._log(TEMPLATE_LEVEL, message, args, **kwargs)
 
     # -- crash reporting --------------------------------------------------------
     def _install_exception_hooks(self) -> None:
@@ -318,4 +355,28 @@ class Logging(logging.Logger):
         return wrapper
 
 
-logger = Logging("DEBUG")
+logger = Logging("INFO")
+
+# Dependency loggers (including discord.py) propagate here. Do not configure
+# their own file handlers or send shared records back through this root.
+logging.getLogger().addHandler(SharedLogHandler())
+logging.getLogger().setLevel(logging.INFO)
+
+
+def relay_output(line):
+    """Receive one child line, preserving source/level and writing it exactly once."""
+    if line.startswith(PIPE_PREFIX):
+        try:
+            data = json.loads(line[len(PIPE_PREFIX):])
+            record = logging.LogRecord(
+                str(data["name"]), int(data["levelno"]), str(data["pathname"]),
+                int(data["lineno"]), str(data["message"]), (), None, str(data["funcName"]))
+            record.created = float(data["created"])
+            record.msecs = float(data["msecs"])
+        except (ValueError, TypeError, KeyError):
+            logger.warning("Malformed subprocess log record: %s", line)
+        else:
+            if logger.isEnabledFor(record.levelno):
+                logger.handle(record)
+    elif line.strip():
+        logger.info("Subprocess output: %s", line.rstrip("\r\n"))

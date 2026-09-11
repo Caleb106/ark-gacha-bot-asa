@@ -11,6 +11,8 @@ import source.gacha_bot.stations as stations
 import source.ASA.player.player_inventory as inventory
 from source.utility.colour_checks import console_output, output_oranage_tp_pixel
 import io
+import os
+from logger.logger import LOG_PATH, logger
 from UI.resources.render import render_resources
 
 
@@ -19,22 +21,34 @@ class discord_commands(commands.Cog):
         self.bot: commands.Bot = bot
         self.running_task = []
         self.start_time = 0
+        self._log_task = None
 
     async def send_new_logs(self):
         log_channel = self.bot.get_channel(int(settings.log_channel_gacha))
-        last_position = 0
+        if log_channel is None:
+            logger.warning("Log channel is unavailable; Discord log forwarding is disabled.")
+            return
+        # Forward new messages without truncating the shared GUI/bot log.
+        last_position = os.path.getsize(LOG_PATH) if os.path.exists(LOG_PATH) else 0
         
         while True:
-            with open("source/logs/logs.txt", 'r') as file:
-                file.seek(last_position)
-                new_logs = file.read()
-                if new_logs:
-                    if len(new_logs) >= 1999:
-                        await log_channel.send(f"New logs:\n```log limit reached 2000 skipping```")
-                    else:
-                        await log_channel.send(f"New logs:\n```{new_logs}```")
+            try:
+                with open(LOG_PATH, 'r', encoding="utf-8") as file:
+                    file.seek(0, os.SEEK_END)
+                    if file.tell() < last_position:
+                        last_position = 0
+                    file.seek(last_position)
+                    new_logs = file.read()
                     last_position = file.tell()
+                for start in range(0, len(new_logs), 1800):
+                    await log_channel.send(f"New logs:\n```{new_logs[start:start + 1800]}```")
+            except (OSError, discord.HTTPException) as error:
+                logger.error("Could not forward logs to Discord: %s", error)
             await asyncio.sleep(5)
+
+    def cog_unload(self):
+        if self._log_task is not None:
+            self._log_task.cancel()
 
     async def embed_send(self,queue_type):
         log_channel = 0
@@ -63,10 +77,9 @@ class discord_commands(commands.Cog):
         if logchn:
             await logchn.send(f'bot starting up now')
         
-        # resetting log files
-        with open("source/logs/logs.txt", 'w') as file:
-            file.write(f"")
-        self.bot.loop.create_task(self.send_new_logs())
+        logger.info("Bot start requested from Discord.")
+        if self._log_task is None or self._log_task.done():
+            self._log_task = self.bot.loop.create_task(self.send_new_logs())
         
         
         await interaction.response.send_message(f"starting up bot now you have 5 seconds before start")

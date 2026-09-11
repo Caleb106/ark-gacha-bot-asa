@@ -1,7 +1,7 @@
 import threading
 
 import cv2
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.utility import template, ocr , screen
 import time
 
@@ -49,7 +49,7 @@ def get_amount_of_item(roi, item, threshold):
     if not b:
         return item, None
     scale = screen.screen_resolution / 1440
-    print(scale)
+    logger.debug(scale)
     #roi which is the same as the region with the item 
     amount = ocr.int_only_roi(
     roi,
@@ -102,7 +102,7 @@ class DepositCounter:
             try:
                 self._deposit_count()
             except Exception as e:
-                logs.logger.error(f"deposit_count error: {e}")
+                logger.error(f"deposit_count error: {e}")
             self._stop_event.wait(self.interval)
 
     def _deposit_count(self):

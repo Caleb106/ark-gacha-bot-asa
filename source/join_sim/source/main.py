@@ -1,7 +1,7 @@
 from source.join_sim.source.utility import windows, recon_utils , utils
 import time
 from  source.join_sim.source.menus import mod_menu , multiplayer_menu, join_game_menu, success,start_menu, failure
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 import source.join_sim.source.crash.crash as crash
 import settings
 
@@ -16,7 +16,7 @@ def is_crashed():
 def join_round(server:str)->bool:
     if not is_menu():
         time.sleep(0.5)
-        logs.logger.debug("joined server")
+        logger.debug("joined server")
         return success.joined_server() # if we arent in the menu we need to restart 
        
     time.sleep(0.5)    
@@ -36,11 +36,11 @@ def join_round(server:str)->bool:
 def sim_loop():
     if is_menu():
         flag = False
-        logs.logger.debug("starting sim")
+        logger.debug("starting sim")
         while flag != True:
             flag = join_round(server)
             time.sleep(0.2)
-        logs.logger.debug("stop sim")
+        logger.debug("stop sim")
 
 def main_loop(server= server):
     # check if crashed, if crashed reset 
@@ -51,7 +51,7 @@ def main_loop(server= server):
         # start sim close game every 15 20 mins incase server crashed
         flag = False
         time1 = time.time() 
-        logs.logger.debug("starting sim")
+        logger.debug("starting sim")
         while flag != True:
             
             if time.time() - time1 >= 15*60:
@@ -62,7 +62,7 @@ def main_loop(server= server):
             flag = join_round(server)
             time.sleep(2)  
 
-        logs.logger.debug("stop sim")
+        logger.debug("stop sim")
         return windows.hwnd
     
 if __name__ == "__main__":

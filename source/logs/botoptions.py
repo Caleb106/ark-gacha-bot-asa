@@ -1,4 +1,4 @@
-import source.logs.gachalogs 
+from logger.logger import logger
 import asyncio
 import typing 
 import functools
@@ -10,7 +10,7 @@ async def run_blocking(blocking_func: typing.Callable, *args, **kwargs) -> typin
     return await asyncio.to_thread(func)
 
 async def task_manager_start():
-    source.logs.gachalogs.logger.debug(f"task_manager_start initiated")
+    logger.debug(f"task_manager_start initiated")
     await run_blocking(task_manager.main)
 
 
