@@ -1,3 +1,4 @@
+from logger.logger import logger
 import source.utility.screen
 import cv2 
 
@@ -14,7 +15,7 @@ def get_orange_pixel():
         y *= 0.75
     roi = source.utility.screen.get_screen_roi(int(x),int(y),1,1)
     hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
-    print(f"{hsv[0, 0]} -> these colours should be put into xxxxxx location in xxxx file") 
+    logger.info(f"{hsv[0, 0]} -> these colours should be put into xxxxxx location in xxxx file")
     return hsv[0, 0]
 
 

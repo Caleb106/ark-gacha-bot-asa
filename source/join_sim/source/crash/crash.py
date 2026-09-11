@@ -3,7 +3,7 @@ import psutil
 import win32process
 import subprocess
 import os
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 from source.join_sim.source.utility import local_player,windows,recon_utils
 import time
 
@@ -21,23 +21,23 @@ def close_game():
         process = psutil.Process(pid)
 
         process.terminate()
-        logs.logger.critical(f"game with pid {pid} terminated")
+        logger.critical(f"game with pid {pid} terminated")
     except psutil.NoSuchProcess:
-        logs.logger.critical("process not found")
+        logger.critical("process not found")
     except psutil.AccessDenied:
-        logs.logger.critical("no permissions to terminate")
+        logger.critical("no permissions to terminate")
     except Exception as e:
-        logs.logger.critical(f"error: {e}")
+        logger.critical(f"error: {e}")
 
 def launch_game_with_steam():
     steam_path = local_player.path("steam.exe")
-    print(steam_path)
+    logger.info(steam_path)
     if os.path.exists(steam_path):
     
         subprocess.run([steam_path, f"steam://run/{appid}"])
-        logs.logger.critical(f"launching game with appid {appid} via steam")
+        logger.critical(f"launching game with appid {appid} via steam")
     else:
-        logs.logger.critical("steam exe not found at the expected location cannot relaunch game")
+        logger.critical("steam exe not found at the expected location cannot relaunch game")
 
 def re_open_game():
     close_game()

@@ -1,7 +1,7 @@
 import time 
 import settings
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.ASA.strucutres import teleporter , inventory ,bed
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state ,console , tribelog
@@ -90,7 +90,7 @@ class gacha_station(base_task):
             if (berry_station or time_between > settings.replenish_interval*60*60): # if time is greater than 4 hours since the last time you went to berry station 
                 teleporter.teleport_not_default(berry_metadata)                    # or if berry station is true( when you go to tekpod and drop all ) and the time between has been longer than 30 mins since youve last been 
                 if settings.external_berry: 
-                    logs.logger.debug("sleeping for 20 seconds as external")
+                    logger.debug("sleeping for 20 seconds as external")
                     time.sleep(20)#letting station spawn in if you have to tp away
                 iguanadon.berry_station()
                 last_berry = time.time()
@@ -100,7 +100,7 @@ class gacha_station(base_task):
             teleporter.teleport_not_default(iguanadon_metadata) # iguanadon is a centeral tp
             
             if settings.external_berry and temp: # quick fix for level 1 bug
-                logs.logger.debug("reconnecting because of level 1 bug - you chose external berry will sleep for 60 seconds as a way to ensure that we are fully loaded in")
+                logger.debug("reconnecting because of level 1 bug - you chose external berry will sleep for 60 seconds as a way to ensure that we are fully loaded in")
                 console.console_write("reconnect")
                 time.sleep(60) # takes a while for the reonnect to actually go into action
 
@@ -140,7 +140,7 @@ class pego_station(base_task):
             teleporter.teleport_not_default(dropoff_metadata) # everytime you collect you have to drop off makes sense to include it into here 
             deposit.deposit_all(dropoff_metadata)
         else:
-            logs.logger.info(f"bot has no crystals in hotbar we are skipping the deposit step")
+            logger.info(f"bot has no crystals in hotbar we are skipping the deposit step")
 
     def get_priority_level(self):
         return 2 # highest prio level as we cant have these get capped 
@@ -158,7 +158,7 @@ class render_station(base_task):
         global berry_station 
         berry_station = True # setting to true as we will be away for mostlikly for a few hours
         if source.gacha_bot.render.render_flag == False:
-            logs.logger.debug(f"render flag{render.render_flag} we are trying to get into the pod now")
+            logger.debug(f"render flag{render.render_flag} we are trying to get into the pod now")
             player_state.reset_state()
             teleporter.teleport_not_default(settings.bed_spawn)
             render.enter_tekpod()

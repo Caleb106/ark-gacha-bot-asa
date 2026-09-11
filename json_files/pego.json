@@ -1,8 +1,12 @@
 [
     {
-        "name": "pego1",
-        "teleporter": "pego1",
+        "name": "Pego 1",
+        "teleporter": "Gacha - Pego 1",
+        "delay": 3300
+    },
+    {
+        "name": "Pego 2",
+        "teleporter": "Gacha - Pego 2",
         "delay": 3300
     }
-
 ]

@@ -30,9 +30,10 @@ async def on_ready():
 api_key = settings.discord_api_key
 
 if __name__ =="__main__":
+    error_str = None
     try:
         asyncio.run(load_cogs())
-        bot.run(api_key)
+        bot.run(api_key, log_handler=None)
 
     # The UI Exception hook might catch all these errors but lets make sure its all seen
     
@@ -50,5 +51,5 @@ if __name__ =="__main__":
               \n\n\nError: {e}"
 
     finally:
-        print(error_str)
-        logger.error(error_str)
+        if error_str:
+            logger.error(error_str)

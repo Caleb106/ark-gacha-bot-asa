@@ -1,5 +1,5 @@
 from source.ASA.player import player_inventory , player_state
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
 import time 
 import settings
@@ -15,10 +15,10 @@ def is_open():
 def enter_data(data:str):
     global last_command
     if source.ASA.config.up_arrow and data == last_command:
-        logs.logger.debug(f"using uparrow to put {data} into the console")
+        logger.debug(f"using uparrow to put {data} into the console")
         pyautogui.press("up")
     else:
-        logs.logger.debug(f"using clipboard to put {data} into the console")
+        logger.debug(f"using clipboard to put {data} into the console")
         clipboard_opened = False
         try: # my pc had issues where it would run threw this and not open clipoard then crash trying to close it
             win32clipboard.OpenClipboard()
@@ -26,7 +26,7 @@ def enter_data(data:str):
             win32clipboard.EmptyClipboard()
             win32clipboard.SetClipboardText(data, win32clipboard.CF_TEXT)
         except Exception as e:
-            print(f"Clipboard error: {e}")
+            logger.error(f"Clipboard error: {e}")
         finally:
             if clipboard_opened:
                 win32clipboard.CloseClipboard()
@@ -38,7 +38,7 @@ def console_ccc():
     attempts = 0
     while data == None:
         attempts += 1
-        logs.logger.debug(f"trying to get ccc data {attempts} / {source.ASA.config.console_ccc_attempts}")
+        logger.debug(f"trying to get ccc data {attempts} / {source.ASA.config.console_ccc_attempts}")
         player_state.reset_state() #reset state at the start to make sure we can open up the console window
         count = 0
         while not is_open():
@@ -46,7 +46,7 @@ def console_ccc():
             utils.press_key("ConsoleKeys")
             template.template_await_true(is_open,1)
             if count >= source.ASA.config.console_open_attempts:
-                logs.logger.error(f"console didnt open after {count} attempts")
+                logger.error(f"console didnt open after {count} attempts")
                 break
         if is_open():
             middle = template.console_strip_check(template.console_strip_middle())
@@ -65,7 +65,7 @@ def console_ccc():
                 win32clipboard.CloseClipboard()
 
         if attempts >= source.ASA.config.console_ccc_attempts:
-            logs.logger.error(f"CCC is still returning NONE after {attempts} attempts")
+            logger.error(f"CCC is still returning NONE after {attempts} attempts")
             break        
     if data != None:    
         ccc_data = data.split()
@@ -80,7 +80,7 @@ def console_write(text:str):
         utils.press_key("ConsoleKeys")
         template.template_await_true(is_open,1)
         if attempts >= source.ASA.config.console_open_attempts:
-            logs.logger.error(f"console didnt open after {attempts} attempts unable to input {text}")
+            logger.error(f"console didnt open after {attempts} attempts unable to input {text}")
             break
 
     if is_open():
@@ -99,6 +99,6 @@ def close_console(middle):
     utils.press_key("Enter")
 
     if middle == True:
-        logs.logger.warning(f"middle console open if this is happening alot something should be changed")
+        logger.warning(f"middle console open if this is happening alot something should be changed")
         time.sleep(0.1*settings.lag_offset)
         utils.press_key("Enter")

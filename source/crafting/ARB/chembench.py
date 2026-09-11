@@ -3,7 +3,7 @@ import ASA.stations.custom_stations
 import ASA.strucutres
 import ASA.strucutres.teleporter
 import template
-import logs.gachalogs as logs
+from logger.logger import logger
 import utils
 import windows
 import variables

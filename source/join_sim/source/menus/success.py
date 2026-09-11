@@ -1,6 +1,6 @@
 from source.join_sim.source.utility import windows, recon_utils , utils
 import time
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
  
 def bed_spawn():
     return recon_utils.check_template_no_bounds("beds_title",0.7)

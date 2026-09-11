@@ -1,52 +1,62 @@
 [
     {
-        "name": "gacha1",
-        "teleporter": "GACHAPAIR1",
+        "name": "Gacha 1",
+        "teleporter": "Gacha - Pair 1:2",
         "resource_type": "element",
         "side": "left"
     },
     {
-        "name": "gacha2",
-        "teleporter": "GACHAPAIR1",
+        "name": "Gacha 2",
+        "teleporter": "Gacha - Pair 1:2",
         "resource_type": "element",
         "side": "right"
     },
     {
-        "name": "gacha3",
-        "teleporter": "GACHAPAIR2",
+        "name": "Gacha 3",
+        "teleporter": "Gacha - Pair 3:4",
         "resource_type": "element",
         "side": "left"
     },
     {
-        "name": "gacha4",
-        "teleporter": "GACHAPAIR2",
+        "name": "Gacha 4",
+        "teleporter": "Gacha - Pair 3:4",
         "resource_type": "element",
         "side": "right"
     },
     {
-        "name": "gacha5",
-        "teleporter": "GACHAPAIR3",
+        "name": "Gacha 5",
+        "teleporter": "Gacha - Pair 5:6",
         "resource_type": "element",
         "side": "left"
     },
     {
-        "name": "gacha6",
-        "teleporter": "GACHAPAIR3",
+        "name": "Gacha 6",
+        "teleporter": "Gacha - Pair 5:6",
         "resource_type": "element",
         "side": "right"
     },
     {
-        "name": "gacha7",
-        "teleporter": "GACHAPAIR4",
+        "name": "Gacha 7",
+        "teleporter": "Gacha - Pair 7:8",
         "resource_type": "element",
         "side": "left"
     },
     {
-        "name": "gacha8",
-        "teleporter": "GACHAPAIR4",
+        "name": "Gacha 8",
+        "teleporter": "Gacha - Pair 7:8",
+        "resource_type": "element",
+        "side": "right"
+    },
+    {
+        "name": "Gacha 9",
+        "teleporter": "Gacha - Pair 9:10",
+        "resource_type": "element",
+        "side": "left"
+    },
+    {
+        "name": "Gacha 10",
+        "teleporter": "Gacha - Pair 9:10",
         "resource_type": "element",
         "side": "right"
     }
-    
-    
 ]

@@ -4,7 +4,7 @@ import settings
 import json
 
 from source.utility import utils ,template , windows ,variables ,screen ,local_player
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.ASA.strucutres import teleporter , inventory
 from source.ASA.stations import custom_stations
 from source.ASA.player import player_inventory , player_state
@@ -47,7 +47,7 @@ def save_temp_items_to_json(file_path: str):
             with open(file_path, "r") as file:
                 current = json.load(file)
         except (json.JSONDecodeError, OSError) as e:
-            print(f"failed to read {file_path}: {e}")
+            logger.error(f"failed to read {file_path}: {e}")
             current = {}
     else:
         current = {}
@@ -61,11 +61,11 @@ def save_temp_items_to_json(file_path: str):
         with open(file_path, "w") as file:
             json.dump(current, file, indent=4)
     except OSError as e:
-        print(f"failed to save {file_path}: {e}")
+        logger.error(f"failed to save {file_path}: {e}")
         return  # don't reset on failure - keep the un-saved amounts for next time
 
     # reset only the keys that were actually written out
-    logs.logger.info(f"temp items collected {temp_items}")
+    logger.info(f"temp items collected {temp_items}")
     for temp_key in KEY_MAP:
         temp_items[temp_key]["amount"] = 0
 
@@ -133,7 +133,7 @@ def vault_deposit(items, metadata):
     time.sleep(0.2*settings.lag_offset)
     inventory.open()
     if not template.template_await_true(template.check_template,1,"vault",0.7):
-        logs.logger.error(f"{side} vault was not opened retrying now ")
+        logger.error(f"{side} vault was not opened retrying now ")
         inventory.close()
         utils.zero()
         utils.set_yaw(metadata.yaw)
@@ -144,7 +144,7 @@ def vault_deposit(items, metadata):
         time.sleep(0.1*settings.lag_offset)
         bool , value = vault.see_vault_full()
         if bool:
-            logs.logger.info("your vault is full skipping adding items")
+            logger.info("your vault is full skipping adding items")
         else:
             for x in range(len(items)):
                 player_inventory.search_in_inventory(items[x])
@@ -169,7 +169,7 @@ def depo_grinder(metadata):
     attempt = 0
     while not template.template_await_true(template.check_template,1,"grinder",0.7):
         attempt += 1
-        logs.logger.error("couldnt open up the grinder while trying to deposit")
+        logger.error("couldnt open up the grinder while trying to deposit")
         inventory.close()
         utils.zero()
         utils.set_yaw(metadata.yaw)
@@ -177,7 +177,7 @@ def depo_grinder(metadata):
         time.sleep(0.5*settings.lag_offset)
         inventory.open()
         if attempt >= source.gacha_bot.config.grinder_attempts:
-            logs.logger.error(f"while trying to deposit we couldnt access grinder")
+            logger.error(f"while trying to deposit we couldnt access grinder")
             break
 
     if template.check_template("grinder",0.7):
@@ -198,7 +198,7 @@ def collect_grindables(metadata):
     attempt = 0
     while not template.template_await_true(template.check_template,1,"grinder",0.7):
         attempt += 1
-        logs.logger.error("couldnt open up the grinder while trying to deposit")
+        logger.error("couldnt open up the grinder while trying to deposit")
         inventory.close()
         utils.zero()
         utils.set_yaw(metadata.yaw)
@@ -206,7 +206,7 @@ def collect_grindables(metadata):
         time.sleep(0.5*settings.lag_offset)
         inventory.open()
         if attempt >= source.gacha_bot.config.grinder_attempts:
-            logs.logger.error(f"while trying to deposit we couldnt access grinder")
+            logger.error(f"while trying to deposit we couldnt access grinder")
             break
 
     if template.check_template("grinder",0.7):
@@ -244,23 +244,23 @@ def vaults(metadata):
         side = entry_vaults["side"]
         items = entry_vaults["items"]
         metadata.side = side
-        logs.logger.debug(f"openening up {name} on the {side} side to depo{items}")
+        logger.debug(f"openening up {name} on the {side} side to depo{items}")
         vault_deposit(items,metadata)
 
 def deposit_all(metadata):
     #utils.pitch_zero()
     #utils.set_yaw(metadata.yaw) # its done this in the tp part to the dedis
-    logs.logger.debug("opening crystals")
+    logger.debug("opening crystals")
     open_crystals()
-    logs.logger.debug("depositing in ele dedi")
+    logger.debug("depositing in ele dedi")
     dedi.dedi_deposit("deposit",settings.height_ele)
     vaults(metadata)
     if settings.height_grind != 0:
-        logs.logger.debug("depositing in grinder")
+        logger.debug("depositing in grinder")
         depo_grinder(metadata)
         grindables_metadata = custom_stations.get_station_metadata(settings.grindables)
         teleporter.teleport_not_default(grindables_metadata)
-        logs.logger.debug("collecting grindables")
+        logger.debug("collecting grindables")
         collect_grindables(grindables_metadata)
     else:
         drop_useless()

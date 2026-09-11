@@ -1,7 +1,7 @@
 import ctypes
 import time
 from . import local_player ,windows ,w_handle
-from source.logs import gachalogs as logs
+from logger.logger import logger
 from source.ASA.player import console , player_state
 """
 FUNCTIONS FOR KEYBOARD 
@@ -87,10 +87,10 @@ def normalize_yaw(yaw):
 def set_yaw(yaw):
     global current_yaw    
     try:
-        logs.logger.debug(f"setting yaw as {float(console.console_ccc()[3])}")
+        logger.debug(f"setting yaw as {float(console.console_ccc()[3])}")
         current_yaw = float(console.console_ccc()[3])
     except Exception as e:
-        logs.logger.error(f"error processing ccc_data[3]: {e}")
+        logger.error(f"error processing ccc_data[3]: {e}")
 
     try:# had an issue where this was a string for some reason
         target = float(yaw)    
@@ -103,7 +103,7 @@ def set_yaw(yaw):
             turn_right(diff)
         current_yaw = normalize_yaw(target)
     except Exception as e:
-            logs.logger.error(f"error processing data into floats: {e}")
+            logger.error(f"error processing data into floats: {e}")
 def set_pitch(pitch):
     global current_pitch
     change = current_pitch - pitch 
@@ -125,7 +125,7 @@ def yaw_zero(ccc_data = None):
             turn_right(-float(ccc_data[3]))
         current_yaw = 0
     except Exception as e:
-        logs.logger.error(f"error processing ccc_data[3]: {e}")
+        logger.error(f"error processing ccc_data[3]: {e}")
         #ark.check_state()
 
 def pitch_zero(ccc_data = None):
@@ -140,11 +140,11 @@ def pitch_zero(ccc_data = None):
             turn_up(-float(ccc_data[4]))
         current_pitch = 0
     except Exception as e:
-        logs.logger.error(f"error processing ccc_data[4]: {e}")
+        logger.error(f"error processing ccc_data[4]: {e}")
         #ark.check_state()
 
 def zero():
-    logs.logger.debug("setting view angles back to 0")
+    logger.debug("setting view angles back to 0")
     global current_yaw
     global current_pitch
     ccc_data = console.console_ccc()

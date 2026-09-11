@@ -1,5 +1,5 @@
 from source.join_sim.source.utility import windows, recon_utils
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 
 buttons = {
     "accept_x": 1255, "accept_y": 980,
@@ -30,7 +30,7 @@ def click_start():
     if is_network_failure():
         windows.click(get_pixel_loc("accept_x"),get_pixel_loc("accept_y"))
         recon_utils.window_still_open_no_bounds("network_failure",0.7,1)
-    logs.logger.debug("clicking start")
+    logger.debug("clicking start")
     windows.click(get_pixel_loc("accept_x"),get_pixel_loc("accept_y")) #doesnt effect anything for backup
     windows.click(get_pixel_loc("start_x"),get_pixel_loc("start_y"))
     recon_utils.window_still_open_no_bounds("join_last_session",0.7,1)

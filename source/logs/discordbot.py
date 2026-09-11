@@ -1,6 +1,6 @@
 import discord
 import task_manager
-import source.logs.gachalogs
+from logger.logger import logger
 
 async def embed_create(queue_type):
     try:
@@ -38,7 +38,7 @@ async def embed_create(queue_type):
             count += 1
         return embed
     except Exception as e:
-        source.logs.gachalogs.logger.error(f"error in embed_create: {e}")
+        logger.error(f"error in embed_create: {e}")
         return discord.Embed(title="error", description=str(e))
 if __name__ =="__main__":
     pass

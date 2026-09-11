@@ -1,3 +1,4 @@
+from logger.logger import logger
 import cv2
 import numpy as np
 import time 
@@ -58,9 +59,9 @@ def check_template(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if max_val > threshold:
-        #logs.logger.template(f"{item} found:{max_val}")
+        #logger.template(f"{item} found:{max_val}")
         return True
-    #logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    #logger.template(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 def check_template_no_bounds(item:str, threshold:float) -> bool:
@@ -92,9 +93,9 @@ def check_template_no_bounds(item:str, threshold:float) -> bool:
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
    
     if max_val > threshold:
-        #logs.logger.template(f"{item} found:{max_val}")
+        #logger.template(f"{item} found:{max_val}")
         return True
-    #logs.logger.template(f"{item} not found:{max_val} threshold:{threshold}")
+    #logger.template(f"{item} not found:{max_val} threshold:{threshold}")
     return False
 
 
@@ -168,6 +169,6 @@ def template_find(item:str,) -> tuple:
 
     start_point =(int(region["start_x"] * multiplier) + max_loc[0], int(region["start_y"] * multiplier) + max_loc[1])
     mid_point = (start_point[0] + width // 2 , start_point[1] + height // 2)
-    print(max_val)
-    print(mid_point)
+    logger.debug(max_val)
+    logger.debug(mid_point)
     return mid_point

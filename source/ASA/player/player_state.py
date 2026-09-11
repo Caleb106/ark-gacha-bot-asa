@@ -1,6 +1,6 @@
 from source.ASA.inventories import inventory
 from source.utility import utils ,template , windows ,variables ,screen ,local_player ,w_handle
-from source.logs import gachalogs as logs
+from logger.logger import logger
 import time 
 import settings
 from source.ASA.player import tribelog , buffs , player_inventory
@@ -52,16 +52,16 @@ human = charecter()
 def check_disconnected():
     
     if main.is_menu() or main.is_crashed():
-        logs.logger.critical("we are disconnected from the server")
+        logger.critical("we are disconnected from the server")
         w_handle.HWND = main.main_loop(str(settings.server_number))
         tribelog.close()
-        logs.logger.critical("joined back into the server waiting 30 seconds to render everything ")
+        logger.critical("joined back into the server waiting 30 seconds to render everything ")
         time.sleep(60)# letting everything load back in
         utils.set_yaw(settings.station_yaw)
         
 
 def reset_state():
-    logs.logger.debug(f"resetting char state now")
+    logger.debug(f"resetting char state now")
     player_inventory.close()
     teleporter.close()
     tribelog.close()
@@ -75,10 +75,10 @@ def check_state(): # mainliy checked at the start of every task to check for foo
     buff = buffs.check_buffs()
     type = buff.check_buffs()
     if type == 1 or source.gacha_bot.render.render_flag: #type 1 is when char is in the tekpod
-        logs.logger.debug(f"tekpod buff found on screen leaving tekpod now reason | type : {type} render flag : {source.gacha_bot.render.render_flag}")
+        logger.debug(f"tekpod buff found on screen leaving tekpod now reason | type : {type} render flag : {source.gacha_bot.render.render_flag}")
         source.gacha_bot.render.leave_tekpod()
     elif type == 2 or type == 3:
-        logs.logger.warning(f"tping back to render bed to replenish food and water | 2= water 3= food | reason:{type}")
+        logger.warning(f"tping back to render bed to replenish food and water | 2= water 3= food | reason:{type}")
         teleporter.teleport_not_default(settings.bed_spawn)
         source.gacha_bot.render.enter_tekpod()
         time.sleep(30) # assuming 30 seconds should replenish the player back to 100/100

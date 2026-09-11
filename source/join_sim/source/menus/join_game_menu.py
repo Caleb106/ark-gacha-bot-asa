@@ -1,5 +1,5 @@
 from source.join_sim.source.utility import windows, recon_utils
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 import time
 buttons = {
     "join_game_x":919,"join_game_y":710,
@@ -18,7 +18,7 @@ def click_join_game():
     windows.move_mouse(100,100)
     time.sleep(0.05)
     if is_open():
-        logs.logger.debug("click join game")
+        logger.debug("click join game")
         location = recon_utils.template_find("join_game")
         windows.click(location[0],location[1])
         recon_utils.window_still_open_no_bounds("join_game",0.55,1)

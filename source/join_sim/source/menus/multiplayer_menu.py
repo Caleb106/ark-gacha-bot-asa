@@ -1,7 +1,7 @@
 from source.join_sim.source.utility import windows, recon_utils , utils
 import pyautogui
 import time
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 
 buttons = {
     "search_x": 2230, "search_y": 260,
@@ -52,11 +52,11 @@ def refresh():
         
 def join_server(server:str):
     if mod_menu():
-        logs.logger.debug("mod menu open waiting")
+        logger.debug("mod menu open waiting")
         return
     
     if is_open():
-        logs.logger.debug("joining server")
+        logger.debug("joining server")
         search_bar_search(server)
         time.sleep(0.5)
         windows.click(get_pixel_loc("first_server_x"), get_pixel_loc("first_server_y"))

@@ -10,6 +10,7 @@ if not exist "venv" (
     pause
     exit /b
 )
+echo.
 
 echo Activating virtual environment...
 call venv\Scripts\activate.bat
@@ -18,8 +19,10 @@ if errorlevel 1 (
     pause
     exit /b
 )
+echo.
 
 echo Running main.py...
+echo.
 python main.py
 
 echo Deactivating virtual environment...

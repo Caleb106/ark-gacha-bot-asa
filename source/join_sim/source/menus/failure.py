@@ -1,6 +1,6 @@
 from source.join_sim.source.utility import windows, recon_utils , utils
 import time
-from source.join_sim.source.logs import logger as logs
+from logger.logger import logger
 import pyautogui
 
 buttons = {
@@ -29,14 +29,14 @@ def no_sessions():
     return recon_utils.check_template_no_bounds("no_session",0.7)
 def has_failure():
     if is_server_full():
-        logs.logger.debug("server full")
+        logger.debug("server full")
         windows.click(get_pixel_loc("cancel_x"), get_pixel_loc("cancel_y")) 
         recon_utils.window_still_open_no_bounds("server_full",0.7,2)
         time.sleep(1)
         windows.click(get_pixel_loc("back_x"), get_pixel_loc("back_y"))
 
     if is_red_fail():
-        logs.logger.debug("red fail")
+        logger.debug("red fail")
         time.sleep(1)
         pyautogui.click(get_pixel_loc("red_okay_x"), get_pixel_loc("red_okay_y")) 
         recon_utils.window_still_open_no_bounds("red_fail",0.7,2)
@@ -44,7 +44,7 @@ def has_failure():
         pyautogui.click(get_pixel_loc("back_x"), get_pixel_loc("back_y")) 
     
     if no_sessions():
-        logs.logger.debug("no sessions found")
+        logger.debug("no sessions found")
         time.sleep(1)
         pyautogui.click(get_pixel_loc("back_x"), get_pixel_loc("back_y")) 
         time.sleep(1)
