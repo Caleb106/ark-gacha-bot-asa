@@ -13,8 +13,10 @@ from abc import ABC ,abstractmethod
 
 global berry_station
 global last_berry
+global cargo_counter
 last_berry = 0
 berry_station = True
+cargo_counter = 1
 
 class base_task(ABC):
     def __init__(self):
@@ -45,7 +47,7 @@ class gacha_station(base_task):
         player_state.check_state()
         global berry_station
         global last_berry
-        
+        global cargo_counter
         temp = False
         time_between = time.time() - last_berry
 
@@ -54,16 +56,23 @@ class gacha_station(base_task):
 
         berry_metadata = custom_stations.get_station_metadata(settings.berry_station)
         iguanadon_metadata = custom_stations.get_station_metadata(settings.iguanadon)
-        cargo_metadata = custom_stations.get_station_metadata(settings.cargo_pickup)
-        
         if settings.cargo_ledger:
             #check weight could use ocr
             #if empty go and collect more
             #go deposit into gacha 
             #maybe save to a json file how long it takes for a weight cap of y traps takes for a gacha -> 
             #we just improve every time ie start 100m then 120m 125m until you find the best time -> 
-            ...
             #for timebeing
+            ledger_stations = settings.ledger_amount
+            extra = ""
+            if cargo_counter > ledger_stations or cargo_counter > 9 :
+                cargo_counter = 1
+            if ledger_stations <=1:
+                ...
+            else:
+                extra = f"{cargo_counter}"
+                cargo_counter += 1
+            cargo_metadata = custom_stations.get_station_metadata(f"{settings.cargo_pickup}{extra}")
             if (berry_station or time_between > settings.replenish_interval*60*60):
                 teleporter.teleport_not_default(cargo_metadata)
                 #cargo pickup
@@ -117,6 +126,8 @@ class gacha_station(base_task):
     def get_requeue_delay(self):
         if settings.seeds_230:
             delay = 10700  # should take about this amount of time to do 230 slots of seeds 
+        elif settings.cargo_ledger:
+            delay = settings.ledger_gacha_wait
         else:
             delay = 6600    # delay can be constant as it will be the same for all gachas 142 stacks took 110 mins
         return delay 

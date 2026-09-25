@@ -125,11 +125,28 @@ def dedi_deposit(height):
     
 def vault_deposit(items, metadata):
     side = metadata.side
-    if side == "right":
-        turn_constant = 1
-    else:
-        turn_constant = -1
-    utils.turn_right(90*turn_constant)
+    def turn_to_vault():
+        if side == "custom":
+            utils.set_yaw(metadata.vposition["yaw"])
+            utils.set_pitch(metadata.vposition["pitch"])
+        else:
+            if side == "right":
+                turn_constant = 1
+            else:
+                turn_constant = -1
+            utils.turn_right(90*turn_constant)
+    def return_to_dedi():
+        if side == "custom":
+            utils.set_yaw(metadata.yaw)
+            utils.set_pitch(metadata.pitch)
+        else:
+            if side == "right":
+                turn_constant = 1
+            else:
+                turn_constant = -1
+            utils.turn_left(90*turn_constant)
+            
+    turn_to_vault()
     time.sleep(0.2*settings.lag_offset)
     inventory.open()
     if not template.template_await_true(template.check_template,1,"vault",0.7):
@@ -137,7 +154,7 @@ def vault_deposit(items, metadata):
         inventory.close()
         utils.zero()
         utils.set_yaw(metadata.yaw)
-        utils.turn_right(90*turn_constant)
+        turn_to_vault()
         time.sleep(0.2*settings.lag_offset)
         inventory.open()
     if template.template_await_true(template.check_template,1,"inventory",0.7):
@@ -152,7 +169,7 @@ def vault_deposit(items, metadata):
                 time.sleep(0.3*settings.lag_offset)
         inventory.close()
         time.sleep(0.2*settings.lag_offset)
-    utils.turn_left(90*turn_constant)
+    return_to_dedi()
     time.sleep(0.2*settings.lag_offset)
 
 def drop_useless():
@@ -239,11 +256,14 @@ def collect_grindables(metadata):
 
 def vaults(metadata):
     vaults_data = load_resolution_data("json_files/vaults.json")
+    #check amount of vaults if 2 assume left / right and if not just assume its ccc 
     for entry_vaults in vaults_data:
         name = entry_vaults["name"]
         side = entry_vaults["side"]
         items = entry_vaults["items"]
         metadata.side = side
+        if side == "custom":
+            metadata.vposition = entry_vaults["position"]
         logger.debug(f"openening up {name} on the {side} side to depo{items}")
         vault_deposit(items,metadata)
 

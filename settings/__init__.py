@@ -32,6 +32,8 @@ use_discord: bool = data["use_discord"]
 cargo_ledger: bool = data["cargo_ledger"]
 ocr_path: str = data["ocr_path"]
 replenish_interval: float = data["replenish_interval"]
+ledger_amount: int = data["ledger_amount"]
+ledger_gacha_wait: int = data["ledger_gacha_wait"]
 
 
 log_channel_gacha = data["log_channel_gacha"]

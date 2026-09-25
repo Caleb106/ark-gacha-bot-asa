@@ -945,6 +945,8 @@ class SettingsPage(FormPage):
         self._entry_row(lhalf, "Render Pushout", "render_pushout")
         self._entry_row(lhalf, "Replenish interval", "replenish_interval")
         self._entry_row(lhalf, "Berry Type", "berry_type")
+        self._entry_row(lhalf, "Ledger amount", "ledger_amount",validate=self._validate_digit_1_9)
+        self._entry_row(lhalf, "Ledger gacha wait", "ledger_gacha_wait")
 
         #Right half, from top to bottom
         self._entry_row(rhalf, "Iguanadon", "iguanadon")
@@ -1025,18 +1027,25 @@ class SettingsPage(FormPage):
             halves.append(half)
         self._tab_pages[key] = page
         return halves
-
-    def _entry_row(self, card, label, key, show=None):
+    
+    @staticmethod
+    def _validate_digit_1_9(proposed):
+        """Entry validatecommand: allow only empty (mid-edit) or a single
+        digit 1-9. Blocks 0, multi-digit input, letters, symbols, etc. at
+        the keystroke level."""
+        return proposed == "" or (len(proposed) == 1 and proposed in "123456789")
+    
+    def _entry_row(self, card, label, key, show=None, validate=None):
         row = card.grid_size()[1]
         ctk.CTkLabel(card, text=label, font=(FONT_FAMILY, 15), text_color=COLOR_TEXT,
-                     anchor="w", width=160).grid(row=row, column=0, sticky="w",
-                                                  padx=(18, 10), pady=8)
-        # border_width=1 matches the card's own hairline border - CTkEntry's
-        # default 2px outline reads noticeably brighter than every other
-        # edge on the page.
+                    anchor="w", width=160).grid(row=row, column=0, sticky="w",
+                                                padx=(18, 10), pady=8)
         entry = ctk.CTkEntry(card, font=(FONT_FAMILY, 15), height=38, corner_radius=8,
-                              fg_color=COLOR_BG, border_width=1,
-                              border_color=COLOR_BORDER, show=show)
+                            fg_color=COLOR_BG, border_width=1,
+                            border_color=COLOR_BORDER, show=show)
+        if validate is not None:
+            vcmd = (self.register(validate), "%P")
+            entry.configure(validate="key", validatecommand=vcmd)
         entry.insert(0, str(self._cfg[key]))
         entry.grid(row=row, column=1, sticky="ew", padx=(0, 18), pady=8)
         entry.bind("<KeyRelease>", lambda _e: self._schedule_save())

@@ -47,7 +47,9 @@ DEFAULTS = {
     "log_active_queue": "",
     "log_wait_queue": "",
     "discord_api_key": "",
-    "ocr_path": r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    "ocr_path": r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+    "ledger_amount": 1,
+    "ledger_gacha_wait": 6600
 }
 
 # Non-string fields need to be cast back to their real type when they come
@@ -72,7 +74,9 @@ FIELD_TYPES = {
     "cargo_ledger": bool,
     "replenish_interval":float, 
     "ocr_path":str,
-    "cargo_pickup":str
+    "cargo_pickup":str,
+    "ledger_amount":int,
+    "ledger_gacha_wait":int
 }
 
 
