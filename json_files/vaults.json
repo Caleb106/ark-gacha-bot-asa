@@ -2,13 +2,13 @@
     {
         "name": "vault1",
         "side": "left",
-        "position":{"yaw": 90, "pitch": 0},
+        "position":{"yaw": 0, "pitch": 0},
         "items":["fabricated","pump","assault"]
     },
     {
         "name": "vault2",
         "side": "right",
-        "position":{"yaw": 90, "pitch": 0},
+        "position":{"yaw": 0, "pitch": 0},
         "items":["riot","cliff","tree","behe"]
     }
 ]
