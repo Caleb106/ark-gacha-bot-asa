@@ -3,6 +3,8 @@ import tkinter as tk
 from copy import deepcopy
 from tkinter import font as tkfont
 from tkinter import messagebox
+import json
+import os 
 
 import customtkinter as ctk
 
@@ -16,6 +18,25 @@ from UI.theme import (
     COLOR_WARNING, FONT_FAMILY,
 )
 
+# ============================================================================
+# DİL DOSYASI YÜKLEYİCİ (TRANSLATION LOADER)
+# ============================================================================
+def load_language():
+    # station_editor.py UI klasöründe olduğu için iki üst dizine çıkıp locales klasörüne ulaşıyoruz.
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    lang_path = os.path.join(base_dir, 'languages', 'tr.json')
+    try:
+        with open(lang_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+lang = load_language()
+
+def _t(group, key):
+    """Yardımcı çeviri fonksiyonu: group ve key'e göre Türkçe karşılığı getirir."""
+    return lang.get(group, {}).get(key, key)
+# ============================================================================
 
 class StationCard(StatCard):
     """The dashboard's card component, made selectable for station lists."""

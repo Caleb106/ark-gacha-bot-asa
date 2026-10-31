@@ -1,0 +1,113 @@
+{
+  "info": {
+    "language": "Türkçe",
+    "translator": "Tuncay_d"
+  },
+  "menus": {
+    "Dashboard": "Kontrol Paneli",
+    "Settings": "Ayarlar",
+    "Stations": "İstasyonlar",
+    "Support": "Destek"
+  },
+  "general": {
+    "All changes saved": "Tüm değişiklikler kaydedildi",
+    "Configure how the bot behaves \u2014 changes save automatically": "Botun nasıl davranacağını yapılandırın \u2014 değişiklikler otomatik olarak kaydedilir",
+    "Add or configure your stations \u2014 changes save automatically": "İstasyonlarınızı ekleyin veya yapılandırın \u2014 değişiklikler otomatik olarak kaydedilir"
+  },
+  "dashboard": {
+    "START BOT": "Bot Çalıştır",
+    "STOP BOT": "Çalışmayı Durdur",
+    "Runtime": "Çalışma Süresi",
+    "Live overview of your bot": "Botunuzun canlı özeti",
+    "Crystals opened": "Açılan Kristal",
+    "Dust Collected": "Toplanan Dust",
+    "Event Log": "Olay Günlüğü",
+    "Resources Farmed": "Kaynak Farmı",
+    "Black Pearls": "Siyah İnci",
+    "Metal Ingots": "Metal Külçe",
+    "Flint": "Çakmaktaşı",
+    "Electronics": "Elektronik",
+    "Crystal": "Kristal",
+    "Debug": "Hata Ayıklama",
+    "Info": "Bilgi",
+    "Warning": "Uyarı",
+    "Error": "Hata",
+    "Critical": "Kritik"
+  },
+  "discord": {
+    "Use Discord": "Discord Kullan",
+    "Command Prefix": "Komut Öneki",
+    "Discord API Key": "Discord API Anahtarı",
+    "Log Channel (Gacha)": "Log Kanalı (Gacha)",
+    "Log Active Queue": "Log Aktif Sıra Kanalı",
+    "Log Wait Queue": "Log Bekleme Sırası Kanalı"
+  },
+  "main_settings": {
+    "Language (Restart Req.)": "Dil (Yeniden Başlatın)",
+    "Server Number": "Sunucu Numarası",
+    "Lag Offset": "Gecikme Toleransı",
+    "Station Yaw": "İstasyon Bakış Açısı",
+    "Render Pushout": "Karakter İleri İtme Mesafesi",
+    "Replenish interval": "Yenilenme Aralığı",
+    "Berry Type": "Meyve Türü",
+    "Ledger amount": "Envanter Kayıt Miktarı",
+    "Ledger gacha wait": "Envanter Gacha Bekleme Süresi",
+    "Iguanadon": "Iguanadon",
+    "Drop Off": "Eşya Bırakma Noktası",
+    "Bed Spawn": "Yatak Doğma Noktası",
+    "Berry Station": "Meyve İstasyonu",
+    "Grindables": "Öğütülecek Eşya İstasyonu",
+    "Cargo Pickup": "Kargo Toplama Noktası",
+    "OCR Path": "OCR Kurulum Yolu"
+  },
+  "features": {
+    "External Berries": "Harici Meyve Toplama",
+    "Seeds 230": "Tohumlar (230)",
+    "Side Crop Plot": "Yan Tarım Alanları",
+    "Y Trap Bot": "Y-Tuzak Botu Aktif",
+    "Singleplayer": "Tek Oyunculu Mod",
+    "Cargo Ledger": "Kargo Envanter Kaydı",
+    "Height Ele": "Element İstasyonu Yüksekliği",
+    "Height Grind": "Öğütücü İstasyon Yüksekliği"
+  },
+  "stations": {
+    "STATION DETAILS": "İSTASYON DETAYLARI",
+    "YOUR STATIONS": "İSTASYONLARINIZ",
+    "Station name": "İstasyon Adı",
+    "Teleporter": "Işınlayıcı Adı",
+    "Visit interval (seconds)": "Ziyaret Aralığı (Saniye)",
+    "Resource type": "Kaynak Türü",
+    "Gacha side": "Gacha'nın Yönü",
+    "left": "sol",
+    "right": "sağ",
+    "Add station": "İstasyon Ekle",
+    "Remove station": "İstasyonu Kaldır",
+    "Changes save after you finish typing.": "Yazmayı bitirdikten sonra değişiklikler kaydedilir.",
+    "A unique name to identify this station.": "Bu istasyonu tanımlamak için benzersiz bir ad.",
+    "Match the teleporter name in game.": "Oyundaki ışınlayıcı adıyla tam olarak eşleştirin.",
+    "3300 seconds = 55 minutes between visits.": "3300 saniye = ziyaretler arasında 55 dakika bekler.",
+    "Use the resource key, for example element.": "Kaynak anahtar kodunu kullanın, örneğin element.",
+    "Which side of the teleporter is this Gacha on?": "Bu Gacha ışınlayıcının hangi tarafında kalıyor?",
+    "Restart the bot to apply saved station changes.": "Kaydedilen istasyon değişikliklerini uygulamak için botu yeniden başlatın."
+  },
+  "crafting": {
+    "CRAFTING OPTIONS": "ÜRETİM SEÇENEKLERİ",
+    "Enable crafting": "Üretimi Etkinleştir",
+    "Use the bot's crafting setting.": "Botun üretim ayarını kullanın.",
+    "Crafting station fields will go here.": "Üretim istasyonu alanları buraya eklenecektir.",
+    "The crafting routine is still a placeholder in the bot.": "Üretim rutini botta şu an için yalnızca bir yer tutucudur.",
+    "This switch saves your preference for when it is implemented.": "Bu anahtar, özellik gelecekte oyuna eklendiğinde kullanılmak üzere tercihinizi kaydeder."
+  },
+  "support": {
+    "Diagnostics & Logs": "Hata Teşhisi ve Loglar",
+    "App Version": "Uygulama Sürümü",
+    "Log File Path": "Log Dosyası Yolu",
+    "Open Log File": "Log Dosyasını Aç",
+    "Open Logs Folder": "Log Klasörünü Aç",
+    "Copy Debug Info": "Hata Ayıklama Bilgilerini Kopyala",
+    "Contact & Community": "İletişim ve Topluluk",
+    "Bot Creator": "Bot Geliştiricisi",
+    "UI Creator": "Arayüz Geliştiricisi",
+    "Diagnostics, logs, and ways to reach us": "Hata teşhisi, günlük kayıtları ve bize ulaşma yolları"
+  }
+}
