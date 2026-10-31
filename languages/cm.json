@@ -1,0 +1,113 @@
+{
+  "info": {
+    "language": "Caveman",
+    "translator": "Claude"
+  },
+  "menus": {
+    "Dashboard": "Big Cave Wall",
+    "Settings": "Twist Stuff",
+    "Stations": "Grunt Spots",
+    "Support": "Help Shaman"
+  },
+  "general": {
+    "All changes saved": "Ug paint all change on wall",
+    "Configure how the bot behaves \u2014 changes save automatically": "Tell bot how act \u2014 Ug save change by self",
+    "Add or configure your stations \u2014 changes save automatically": "Make or fix grunt spots \u2014 Ug save change by self"
+  },
+  "dashboard": {
+    "START BOT": "UNGA BUNGA GO",
+    "STOP BOT": "BONK BOT STOP",
+    "Runtime": "How Long Bot Alive",
+    "Live overview of your bot": "Watch bot live, big look",
+    "Crystals opened": "Shiny Rocks Smashed",
+    "Dust Collected": "Dirt Powder Grabbed",
+    "Event Log": "Cave Wall Scratches",
+    "Resources Farmed": "Stuff Grabbed",
+    "Black Pearls": "Dark Round Rocks",
+    "Metal Ingots": "Hard Rock Bricks",
+    "Flint": "Spark Rock",
+    "Electronics": "Lightning Rock Thing",
+    "Crystal": "Shiny Rock",
+    "Debug": "Bug Poke",
+    "Info": "Ug Say",
+    "Warning": "Mammoth Coming",
+    "Error": "Ug Mess Up",
+    "Critical": "Volcano Boom"
+  },
+  "discord": {
+    "Use Discord": "Use Discord Cave",
+    "Command Prefix": "Grunt Start Mark",
+    "Discord API Key": "Discord Magic Bone Key",
+    "Log Channel (Gacha)": "Scratch Cave (Gacha)",
+    "Log Active Queue": "Scratch Cave: Who Doing Now",
+    "Log Wait Queue": "Scratch Cave: Who Waiting In Line"
+  },
+  "main_settings": {
+    "Language (Restart Req.)": "Grunt Style (Bot Sleep Then Wake)",
+    "Server Number": "Big Land Number",
+    "Lag Offset": "Slow Rock Fudge",
+    "Station Yaw": "Spot Head Turn",
+    "Render Pushout": "Shove Body Forward",
+    "Replenish interval": "Grow Back Wait",
+    "Berry Type": "Berry Kind",
+    "Ledger amount": "Cave Wall Count",
+    "Ledger gacha wait": "Cave Wall Gacha Wait",
+    "Iguanadon": "Big Lizard Iguanadon",
+    "Drop Off": "Throw Stuff Spot",
+    "Bed Spawn": "Sleep Fur Spot",
+    "Berry Station": "Berry Grab Spot",
+    "Grindables": "Smash Stuff Spot",
+    "Cargo Pickup": "Carry Box Grab Spot",
+    "OCR Path": "Eye Magic Path"
+  },
+  "features": {
+    "External Berries": "Far Berries",
+    "Seeds 230": "Plant Bits (230)",
+    "Side Crop Plot": "Side Dirt Plants",
+    "Y Trap Bot": "Y Trap Bot Go",
+    "Singleplayer": "Just Ug Alone",
+    "Cargo Ledger": "Carry Box Wall",
+    "Height Ele": "Glow Goo Spot Height",
+    "Height Grind": "Smash Spot Height"
+  },
+  "stations": {
+    "STATION DETAILS": "GRUNT SPOT DETAILS",
+    "YOUR STATIONS": "YOUR GRUNT SPOTS",
+    "Station name": "Spot Name",
+    "Teleporter": "Magic Zap Rock Name",
+    "Visit interval (seconds)": "Visit Wait (Sun Blinks)",
+    "Resource type": "Stuff Kind",
+    "Gacha side": "Gacha Which Hand",
+    "left": "left hand",
+    "right": "right hand",
+    "Add station": "Make Spot",
+    "Remove station": "Smash Spot",
+    "Changes save after you finish typing.": "Ug save after you stop scratching.",
+    "A unique name to identify this station.": "Name only this spot has. No twin.",
+    "Match the teleporter name in game.": "Name same as zap rock in game. Exact. Ug mean it.",
+    "3300 seconds = 55 minutes between visits.": "3300 blinks = 55 minutes wait between visits.",
+    "Use the resource key, for example element.": "Use stuff key, like element.",
+    "Which side of the teleporter is this Gacha on?": "Which hand side of zap rock Gacha sit?",
+    "Restart the bot to apply saved station changes.": "Wake bot again so saved spot change work."
+  },
+  "crafting": {
+    "CRAFTING OPTIONS": "MAKE-THING OPTIONS",
+    "Enable crafting": "Let Ug Make Things",
+    "Use the bot's crafting setting.": "Use bot make-thing setting.",
+    "Crafting station fields will go here.": "Make-thing spot boxes go here. Later.",
+    "The crafting routine is still a placeholder in the bot.": "Make-thing not done yet. Bot just pretend.",
+    "This switch saves your preference for when it is implemented.": "Switch remember what you want for when Ug finish it."
+  },
+  "support": {
+    "Diagnostics & Logs": "Bug Look and Wall Scratches",
+    "App Version": "App Age Number",
+    "Log File Path": "Scratch File Path",
+    "Open Log File": "Open Scratch File",
+    "Open Logs Folder": "Open Scratch Cave",
+    "Copy Debug Info": "Copy Bug Info",
+    "Contact & Community": "Grunt To Tribe",
+    "Bot Creator": "Bot Maker Ug",
+    "UI Creator": "Pretty Picture Maker Ug",
+    "Diagnostics, logs, and ways to reach us": "Bug look, wall scratches, and how yell at us"
+  }
+}

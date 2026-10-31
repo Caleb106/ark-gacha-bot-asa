@@ -348,7 +348,7 @@ class DashboardPage(ctk.CTkFrame):
 
         lang_menu = ctk.CTkOptionMenu(
             header,
-            values=["en", "tr"],
+            values=["en", "tr", "cm"],
             width=85,
             height=32,
             font=(FONT_FAMILY, 14, "bold"),
