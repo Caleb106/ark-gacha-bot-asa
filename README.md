@@ -11,9 +11,9 @@ and will install the dependencies required to a venv folder in the project
 you can then either run main.py or run the run.bat which will also pull(check for updates) from github if you have cloned the project
 
 Some clarification on the settings
-in main settings Ledger Gacha Wait determines how long the bot will wait before regoing to the gachas this setting only matters with the cargo ledger option 
+in main settings Ledger Gacha Wait determines how long in seconds the bot will wait before regoing to the gachas this setting only matters with the cargo ledger option 
 as it is dependent on your gachas weight stats 
-Replenish interval is the amount of time between the bot going to pickup from the central station For berry bot it goes to feeding troughs
+Replenish interval is the amount of time in hours between the bot going to pickup from the central station For berry bot it goes to feeding troughs
 if you have a cargo ledger bot it will go to the cargo ledger 
 
 You can also increase the default amount of vaults and dedi boxs in the respected json_files/*.json 
